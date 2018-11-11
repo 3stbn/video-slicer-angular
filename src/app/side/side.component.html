@@ -1,0 +1,86 @@
+<a class="button is-primary" (click)="addClip()">Add Clips</a>
+<div [ngClass]="{'modal': true, 'is-active': modal}">
+  <div class="modal-background"></div>
+  <div class="modal-content">
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title is-marginless" >New CLip</p>
+        <button class="delete" aria-label="close" (click)="cancelClip()"></button>
+      </header>
+      <section class="modal-card-body">
+        <div class="field">
+          <video>
+            <source src="http://grochtdreis.de/fuer-jsfiddle/video/sintel_trailer-480.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Name</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <p class="control is-expanded has-icons-left">
+                <input class="input" type="text" placeholder="Name" [(ngModel)]="clipName">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-edit"></i>
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Range</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <p class="control is-expanded has-icons-left">
+                <input class="input" type="number" placeholder="Start" [(ngModel)]="clipStart">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-hourglass-start"></i>
+                </span>
+              </p>
+            </div>
+            <div class="field">
+              <p class="control is-expanded has-icons-left">
+                <input class="input" type="number" placeholder="End" [(ngModel)]="clipEnd">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-hourglass-end"></i>
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <footer class="modal-card-foot" style="justify-content: flex-end">
+        <button class="button is-primary" (click)="saveClip()">Save</button>
+        <button class="button" (click)="cancelClip()" >Cancel</button>
+      </footer>
+      </div>
+  </div>
+  <button class="modal-close is-large" aria-label="close" (click)="cancelClip()"></button>
+</div>
+<div class="card" *ngFor="let clip of clips, let i = index">
+  <header class="card-header">
+    <p class="card-header-title">
+      {{clip.name}}
+    </p>
+  </header>
+  <div class="card-content">
+    <div class="media">
+      <div class="media-left">
+        <figure class="image is-48x48 is-marginless">
+          <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+        </figure>
+      </div>
+      <div class="media-content">
+        <p class="title is-4">{{clip.name}}</p>
+        <p class="subtitle is-6">{{clip.start}} - {{clip.end}}</p>
+      </div>
+    </div>
+  </div>
+  <footer class="card-footer">
+    <a href="#" class="card-footer-item" (click)="editCLip(i)">Edit</a>
+    <a href="#" class="card-footer-item" (click)="deleteClip(i)">Delete</a>
+  </footer>
+</div>

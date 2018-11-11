@@ -1,0 +1,19 @@
+.root{
+  min-height: 100vh;
+}
+.content {
+  min-height: calc(100vh - 2.5rem)
+}
+.content .is-3 {
+  padding: 2rem;
+}
+.content .is-3 {
+  position: fixed;
+  height: 100%;
+  overflow-y: auto;
+}
+.content .is-9 {
+  z-index: -1;
+  position: fixed;
+  left: 25%;
+}
