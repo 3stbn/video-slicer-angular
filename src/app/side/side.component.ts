@@ -51,10 +51,10 @@ export class SideComponent implements OnInit {
     this.clipStart = null;
     this.clipEnd = null;
   }
-  deleteClip(clipIndex) {
-    this.clips.splice(clipIndex, 1);
+  deleteClip(index) {
+    this.clips.splice( index, 1);
   }
-  editCLip(clipIndex) {
+  editClip(clipIndex) {
     this.modalType = 'edit';
     this.clipIndex = clipIndex;
     const clip = this.clips[clipIndex];

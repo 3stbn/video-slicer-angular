@@ -53,34 +53,22 @@
         </div>
       </section>
       <footer class="modal-card-foot" style="justify-content: flex-end">
-        <button class="button is-primary" (click)="saveClip()">Save</button>
-        <button class="button" (click)="cancelClip()" >Cancel</button>
+        <button class="button is-primary" 
+          (click)="saveClip()">Save
+        </button>
+        <button class="button" 
+          (click)="cancelClip()" >Cancel
+      </button>
       </footer>
       </div>
   </div>
-  <button class="modal-close is-large" aria-label="close" (click)="cancelClip()"></button>
+  <button class="modal-close is-large" aria-label="close" 
+    (click)="cancelClip()">
+  </button>
 </div>
-<div class="card" *ngFor="let clip of clips, let i = index">
-  <header class="card-header">
-    <p class="card-header-title">
-      {{clip.name}}
-    </p>
-  </header>
-  <div class="card-content">
-    <div class="media">
-      <div class="media-left">
-        <figure class="image is-48x48 is-marginless">
-          <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
-        </figure>
-      </div>
-      <div class="media-content">
-        <p class="title is-4">{{clip.name}}</p>
-        <p class="subtitle is-6">{{clip.start}} - {{clip.end}}</p>
-      </div>
-    </div>
-  </div>
-  <footer class="card-footer">
-    <a href="#" class="card-footer-item" (click)="editCLip(i)">Edit</a>
-    <a href="#" class="card-footer-item" (click)="deleteClip(i)">Delete</a>
-  </footer>
-</div>
+<app-clips 
+  *ngFor="let clip of clips, let i = index"
+  [clip]="clip"
+  (clipDeleted)="deleteClip(i)"
+  (clipEdited)="editClip(i)"
+></app-clips>
