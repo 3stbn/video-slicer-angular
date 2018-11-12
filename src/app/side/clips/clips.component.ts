@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import {Clip} from '../clip.model';
 
 @Component({
   selector: 'app-clips',
@@ -7,19 +8,22 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 })
 export class ClipsComponent implements OnInit {
 
-  @Input() clip: {name: string, start: number, end: number};
+  @Input() clip: Clip;
   @Output() clipDeleted = new EventEmitter();
-  @Output() clipEdited = new EventEmitter();
+  @Output() editClip = new EventEmitter<{modal: boolean, modalType: string}>();
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  deleteCLipEmmiter() {
+  deleteCLipEmmiter(): void {
     this.clipDeleted.emit();
   }
-  editCLipEmmiter() {
-    this.clipEdited.emit();
+  editCLipEmmiter(): void {
+    this.editClip.emit({
+      modal: true,
+      modalType: 'edit',
+    });
   }
 }

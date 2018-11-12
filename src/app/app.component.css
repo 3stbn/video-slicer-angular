@@ -4,9 +4,7 @@
 .content {
   min-height: calc(100vh - 2.5rem)
 }
-.content .is-3 {
-  padding: 2rem;
-}
+
 .content .is-3 {
   overflow-y: auto;
   max-height: calc(100vh - 2.5rem)

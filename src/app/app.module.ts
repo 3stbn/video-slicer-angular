@@ -7,6 +7,9 @@ import { HeaderComponent } from './header/header.component';
 import { SideComponent } from './side/side.component';
 import { PreviewComponent } from './preview/preview.component';
 import { ClipsComponent } from './side/clips/clips.component';
+import { ClipModalComponent } from './side/clip-modal/clip-modal.component';
+import { NewClipComponent } from './side/new-clip/new-clip.component';
+import { StaticClipComponent } from './side/static-clip/static-clip.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +17,10 @@ import { ClipsComponent } from './side/clips/clips.component';
     HeaderComponent,
     SideComponent,
     PreviewComponent,
-    ClipsComponent
+    ClipsComponent,
+    ClipModalComponent,
+    NewClipComponent,
+    StaticClipComponent
   ],
   imports: [
     BrowserModule,

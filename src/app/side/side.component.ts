@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Clip } from './clip.model';
 
 @Component({
   selector: 'app-side',
@@ -6,61 +7,41 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./side.component.css']
 })
 export class SideComponent implements OnInit {
-  modal = false;
-  modalType = 'create';
+  modal: boolean;
+  modalType: string;
   clips = [];
-  clipName = '';
-  clipStart = null;
-  clipEnd = null;
-  clipIndex = null;
+  clipSelected: Clip;
+  clipSelectedIndex: number;
+
 
   constructor() { }
 
   ngOnInit() {
   }
-  toogleModal() {
-    this.modal = !this.modal;
+
+  handleClipCreated(clip: Clip) {
+    this.clips.push(clip);
   }
-  addClip() {
-    this.toogleModal();
-    this.modalType = 'create';
-  }
-  saveClip() {
-    if (this.modalType === 'create') {
-      this.clips.push({
-        name: this.clipName,
-        start: this.clipStart,
-        end: this.clipEnd
-      });
-      this.toogleModal();
-      this.resetForm();
-    } else {
-      const clip = this.clips[this.clipIndex];
-      clip.name = this.clipName;
-      clip.start = this.clipStart;
-      clip.end = this.clipEnd;
-      this.toogleModal();
-    }
-  }
-  cancelClip() {
-    this.toogleModal();
-    this.resetForm();
-  }
-  resetForm() {
-    this.clipName = '';
-    this.clipStart = null;
-    this.clipEnd = null;
+  handleClipEdited(clip: Clip) {
+    const clipToEdit = this.clips[this.clipSelectedIndex];
+    clipToEdit.name = clip.name;
+    clipToEdit.start = clip.start;
+    clipToEdit.end = clip.end;
   }
   deleteClip(index) {
     this.clips.splice( index, 1);
   }
-  editClip(clipIndex) {
-    this.modalType = 'edit';
-    this.clipIndex = clipIndex;
-    const clip = this.clips[clipIndex];
-    this.clipName = clip.name;
-    this.clipStart = clip.start;
-    this.clipEnd = clip.end;
-    this.toogleModal();
+  handleEditClip(event: {modal: boolean, modalType: string}, i) {
+    this.modal = event.modal;
+    this.modalType = event.modalType;
+    this.clipSelected = this.clips[i];
+    this.clipSelectedIndex = i;
+  }
+  handleNewClip(event: {modal: boolean, modalType: string}) {
+    this.modal = event.modal;
+    this.modalType = event.modalType;
+  }
+  handleCloseModal(event: boolean) {
+    this.modal = event;
   }
 }
