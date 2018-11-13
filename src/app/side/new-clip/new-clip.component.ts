@@ -1,4 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { ClipService } from 'src/app/shared/clip.service';
 
 @Component({
   selector: 'app-new-clip',
@@ -7,17 +8,13 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 })
 export class NewClipComponent implements OnInit {
 
-  @Output() newClip = new EventEmitter<{modal: boolean, modalType: string}>();
-
-  constructor() { }
+  constructor(private clipService: ClipService) { }
 
   ngOnInit() {
   }
   onNewCLip(): void {
-    this.newClip.emit({
-      modal: true,
-      modalType: 'create'
-    });
+    this.clipService.toggleModal.emit(true);
+    this.clipService.modalType.emit('create');
   }
 
 }

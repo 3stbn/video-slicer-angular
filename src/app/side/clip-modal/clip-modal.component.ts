@@ -1,5 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, Input, ViewChild, ElementRef } from '@angular/core';
-import {Clip} from '../clip.model';
+import {Clip} from '../../shared/clip.model';
+import { ClipService } from 'src/app/shared/clip.service';
 
 @Component({
   selector: 'app-clip-modal',
@@ -10,13 +11,17 @@ export class ClipModalComponent implements OnInit {
 
   @Input() modalType: string;
   @Input() clipToEdit: Clip;
+
   @Output() showModal = new EventEmitter<boolean>();
-  @Output() clipCreated = new EventEmitter<Clip>();
   @Output() clipEdited = new EventEmitter<Clip>();
 
   @ViewChild('videoSelector') videoSelectorRef: ElementRef;
   video: HTMLVideoElement;
 
+  upperStart: boolean;
+  upperEnd: boolean;
+
+  clipId: number;
   clipNameInput: string;
   clipStartInput: number;
   clipEndInput: number;
@@ -24,33 +29,34 @@ export class ClipModalComponent implements OnInit {
 
   iconPlayPause = 'fa-play';
 
-  constructor() { }
+  constructor(private clipService: ClipService) { }
 
   ngOnInit() {
     this.video = this.videoSelectorRef.nativeElement;
     if (this.modalType === 'edit') {
-      this.clipNameInput  = this.clipToEdit.name;
-      this.clipStartInput  = this.clipToEdit.start;
-      this.clipEndInput  = this.clipToEdit.end;
-      this.video.currentTime = this.clipToEdit.start;
+      const clipToEdit = this.clipToEdit;
+      this.clipId = clipToEdit.id;
+      this.clipNameInput = clipToEdit.name;
+      this.clipStartInput = clipToEdit.start;
+      this.clipEndInput = clipToEdit.end;
+      this.video.currentTime = clipToEdit.start;
     }
   }
-  cancelClip(): void {
-    this.showModal.emit(false);
+  closeModal(): void {
+    this.clipService.toggleModal.emit(false);
   }
   onSaveClip() {
     switch (this.modalType) {
       case('create'):
         const clip = new Clip(this.clipNameInput, this.clipStartInput, this.clipEndInput);
-        this.clipCreated.emit(clip);
-        this.showModal.emit(false);
+        this.clipService.addCLip(clip);
+        this.closeModal();
         break;
       case('edit'):
         const clipEdited = new Clip(this.clipNameInput, this.clipStartInput, this.clipEndInput);
-        this.clipEdited.emit(clipEdited);
-        this.showModal.emit(false);
+        this.clipService.editClip(clipEdited, this.clipId);
+        this.closeModal();
     }
-
   }
   seekVideo(typeOfInput) {
     if (typeOfInput === 'start') {
@@ -66,7 +72,6 @@ export class ClipModalComponent implements OnInit {
       const endInput = this.clipEndInput;
       this.video.currentTime = endInput;
     }
-
   }
   defineVideoDuration() {
     // Triggered when the video data is loaded to define max values for the ranges inputs
@@ -99,6 +104,34 @@ export class ClipModalComponent implements OnInit {
     if (Math.floor(ct) === this.clipEndInput - 1 ) {
       this.video.pause();
       this.iconPlayPause = 'fa-play';
+    }
+  }
+  trackMousePosition(event) {
+    const hoverOnPercent = event.offsetX / event.target.clientWidth;
+    const lowerValue = this.clipStartInput;
+    const upperValue = this.clipEndInput;
+    const closeValue = this.videoDuration / 10;
+    if (
+      upperValue - lowerValue < closeValue &&
+      upperValue > this.videoDuration * .9
+    ) {
+      this.upperStart = true;
+      this.upperEnd = false;
+    } else if (
+      upperValue - lowerValue < closeValue &&
+      lowerValue < this.videoDuration * .1
+    ) {
+      this.upperStart = false;
+      this.upperEnd = true;
+    } else {
+      const middleValue = lowerValue + (upperValue - lowerValue) / 2;
+      if (hoverOnPercent < middleValue / this.videoDuration) {
+        this.upperStart = true;
+        this.upperEnd = false;
+      } else {
+        this.upperStart = false;
+        this.upperEnd = true;
+      }
     }
   }
 }

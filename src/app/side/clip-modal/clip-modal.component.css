@@ -10,7 +10,6 @@
   width: 94%;
   height: 20px;
 }
-
 .input-range-tracker {
   position: absolute;
   left: 0;
@@ -43,8 +42,8 @@ input[type="range"] {
   background: transparent;
 }
 
-input[type="range"].display-upper {
-  z-index: 1;
+.displayUpper {
+  z-index: 99 !important;
 }
 
 input[type="range"]:not(*:root) {
@@ -73,28 +72,28 @@ input[name="range-upper"]::-webkit-slider-thumb, input[name="range-upper"]::-web
   background: hsl(171, 100%, 41%);
   cursor: pointer;
 }
-
+/*  Firefox */
 input[type="range"]::-moz-range-track {
-  background: transparent;
+	background: transparent;
 }
 
 input[type="range"]::-moz-range-thumb {
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border: 0;
-  border-radius: 50%;
-  pointer-events: auto;
+	appearance: none;
+	width: 20px;
+	height: 20px;
+	border: 0;
+	border-radius: 50%;
+	pointer-events: auto;
 }
 
 input[name="range-lower"]::-moz-range-thumb {
-  background: blue;
+	background:  hsl(217, 71%, 53%);
 }
 
 input[name="range-upper"]::-moz-range-thumb {
-  background: blue;
+	background:hsl(171, 100%, 41%);
 }
-
+/* Internet Explorer */
 input[type="range"]::-ms-track {
   background: transparent;
   border-color: transparent;
@@ -111,9 +110,9 @@ input[type="range"]::-ms-thumb {
 }
 
 input[name="range-lower"]::-ms-thumb {
-  background: blue;
+  background:hsl(217, 71%, 53%);
 }
 
 input[name="range-upper"]::-ms-thumb {
-  background: blue;
+  background: hsl(171, 100%, 41%);
 }

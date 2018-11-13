@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Clip } from './clip.model';
+import { Clip } from '../shared/clip.model';
+import { ClipService } from '../shared/clip.service';
 
 @Component({
   selector: 'app-side',
@@ -11,37 +12,24 @@ export class SideComponent implements OnInit {
   modalType: string;
   clips = [];
   clipSelected: Clip;
-  clipSelectedIndex: number;
 
-
-  constructor() { }
+  constructor(private clipService: ClipService) { }
 
   ngOnInit() {
-  }
-
-  handleClipCreated(clip: Clip) {
-    this.clips.push(clip);
-  }
-  handleClipEdited(clip: Clip) {
-    const clipToEdit = this.clips[this.clipSelectedIndex];
-    clipToEdit.name = clip.name;
-    clipToEdit.start = clip.start;
-    clipToEdit.end = clip.end;
-  }
-  deleteClip(index) {
-    this.clips.splice( index, 1);
-  }
-  handleEditClip(event: {modal: boolean, modalType: string}, i) {
-    this.modal = event.modal;
-    this.modalType = event.modalType;
-    this.clipSelected = this.clips[i];
-    this.clipSelectedIndex = i;
-  }
-  handleNewClip(event: {modal: boolean, modalType: string}) {
-    this.modal = event.modal;
-    this.modalType = event.modalType;
-  }
-  handleCloseModal(event: boolean) {
-    this.modal = event;
+    this.clips = this.clipService.getClips();
+    this.clipService.clipsChanged.subscribe(
+      (clips: Clip[]) => this.clips = clips
+    );
+    this.clipService.toggleModal.subscribe(
+      (modal: boolean) => this.modal = modal
+    );
+    this.clipService.modalType.subscribe(
+      (type: string) => {
+        this.modalType = type;
+      }
+    );
+    this.clipService.clipToEdit.subscribe(
+      (clip: Clip) => this.clipSelected = clip
+    );
   }
 }

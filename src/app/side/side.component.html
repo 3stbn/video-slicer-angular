@@ -2,18 +2,11 @@
     <app-static-clip></app-static-clip>
 </div>
 <div class="clips-panel">
-  <app-new-clip 
-    (newClip)="handleNewClip($event)">
-  </app-new-clip>
-  <app-clips *ngFor="let clip of clips, let i = index"
+  <app-new-clip></app-new-clip>
+  <app-clips *ngFor="let clip of clips"
     [clip]="clip"
-    (clipDeleted)="deleteClip(i)"
-    (editClip)="handleEditClip($event, i)"
   ></app-clips>
   <app-clip-modal *ngIf="modal"
-    (showModal)="handleCloseModal($event)"
-    (clipCreated)="handleClipCreated($event)"
-    (clipEdited)="handleClipEdited($event)"
     [modalType]="modalType"
     [clipToEdit]="clipSelected">
   </app-clip-modal>
