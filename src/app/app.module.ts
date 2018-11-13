@@ -10,6 +10,8 @@ import { ClipsComponent } from './side/clips/clips.component';
 import { ClipModalComponent } from './side/clip-modal/clip-modal.component';
 import { NewClipComponent } from './side/new-clip/new-clip.component';
 import { StaticClipComponent } from './side/static-clip/static-clip.component';
+import { VideoPlayerComponent } from './video-player/video-player.component';
+
 import { ClipService } from './shared/clip.service';
 
 @NgModule({
@@ -21,7 +23,8 @@ import { ClipService } from './shared/clip.service';
     ClipsComponent,
     ClipModalComponent,
     NewClipComponent,
-    StaticClipComponent
+    StaticClipComponent,
+    VideoPlayerComponent,
   ],
   imports: [
     BrowserModule,

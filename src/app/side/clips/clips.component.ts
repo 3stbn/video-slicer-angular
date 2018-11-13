@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import {Clip} from '../../shared/clip.model';
 import { ClipService } from 'src/app/shared/clip.service';
 
@@ -10,8 +10,6 @@ import { ClipService } from 'src/app/shared/clip.service';
 export class ClipsComponent implements OnInit {
 
   @Input() clip: Clip;
-  @Output() clipDeleted = new EventEmitter();
-  @Output() editClip = new EventEmitter<{modal: boolean, modalType: string}>();
 
   constructor(private clipService: ClipService) { }
 
