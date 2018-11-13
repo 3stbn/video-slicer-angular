@@ -3,9 +3,8 @@
     <video #videoSelector
     (loadedmetadata)="defineVideoDuration()"
     (timeupdate)="manageVideoTracker()"
-    (canplay)="setRangeUI()"
     >
-      <source [src]="videoSource"type="video/mp4">
+      <source src="http://grochtdreis.de/fuer-jsfiddle/video/sintel_trailer-480.mp4" type="video/mp4">
     </video>
   </div>
   <div class="videoControls">
@@ -18,19 +17,25 @@
     </div>
     <div class="input-range-container">
       <div class="input-range-tracker"></div>
-      <div class="clip-width" #clipWidth></div>
-      <div class="input-range-tracker-clip" #trackRangeClip (click)="changeCurrentTime($event)"></div>
       <div class="input-range-tracker-between" #trackerBetween></div>
       <input type="range" min="0" name="range-lower" id="range-lower"
+      [ngClass]="{'displayUpper': upperStart}"
+      (mouseenter)="trackMousePosition($event)"
+      (mousemove)="trackMousePosition($event)"
       [max]="videoDuration"
-      [value]="clipStart"
-      disabled
+      [(ngModel)]="clipStartInput"
+      (ngModelChange)="onStartChanges($event)"
+      (input)="seekVideo('start', $event)"
       >
       <input type="range" name="range-upper" id="range-upper"
       min="0"
+      [ngClass]="{'displayUpper': upperEnd}"
+      (mouseenter)="trackMousePosition($event)"
+      (mousemove)="trackMousePosition($event)"
       [max]="videoDuration"
-      [value]="clipEnd"
-      disabled
+      [(ngModel)]="clipEndInput"
+      (ngModelChange)="onEndChanges($event)"
+      (input)="seekVideo('end',$event)"
       >
     </div>
   </div>

@@ -10,10 +10,11 @@ import { ClipsComponent } from './side/clips/clips.component';
 import { ClipModalComponent } from './side/clip-modal/clip-modal.component';
 import { NewClipComponent } from './side/new-clip/new-clip.component';
 import { StaticClipComponent } from './side/static-clip/static-clip.component';
-import { VideoPlayerComponent } from './video-player/video-player.component';
 
 import { ClipService } from './shared/clip.service';
 import { PlayerService } from './shared/player.service';
+import { VideoEditorComponent } from './video-editor/video-editor.component';
+import { VideoPlayerComponent } from './video-player/video-player.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { PlayerService } from './shared/player.service';
     ClipModalComponent,
     NewClipComponent,
     StaticClipComponent,
+    VideoEditorComponent,
     VideoPlayerComponent,
   ],
   imports: [

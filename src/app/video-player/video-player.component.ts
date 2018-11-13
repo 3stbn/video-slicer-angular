@@ -1,6 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, Renderer2, OnChanges } from '@angular/core';
-import { ClipService } from '../shared/clip.service';
-import { Clip } from '../shared/clip.model';
+import { Component, OnInit, Input, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { PlayerService } from '../shared/player.service';
 
 @Component({
@@ -8,145 +6,81 @@ import { PlayerService } from '../shared/player.service';
   templateUrl: './video-player.component.html',
   styleUrls: ['./video-player.component.css']
 })
+export class VideoPlayerComponent implements OnInit {
 
-export class VideoPlayerComponent implements OnInit, OnChanges {
-  @Input() playerType: string;
-  @Input() clip: Clip;
+  @Input() videoSource: string;
+  @Input() clipStart: number;
+  @Input() clipEnd: number;
+  iconPlayPause = 'fa-play';
+  videoDuration: number;
+  metadataLoaded: boolean;
 
   @ViewChild('videoSelector') videoSelectorRef: ElementRef;
   video: HTMLVideoElement;
 
-  @ViewChild('trackerBetween') trackerBetweenRef: ElementRef;
-
-  upperStart: boolean;
-  upperEnd: boolean;
-  videoDuration: number;
-  iconPlayPause = 'fa-play';
-  metadataLoaded: boolean;
-
-  @Input() clipStartInput: number;
-  @Input() clipEndInput: number;
+  @ViewChild ('trackerBetween') trackerBetweenRef: ElementRef;
+  @ViewChild ('trackRangeClip') trackerRangeRef: ElementRef;
+  @ViewChild ('clipWidth') clipWidthRef: ElementRef;
 
   constructor(private playerService: PlayerService, private renderer: Renderer2) { }
 
   ngOnInit() {
     this.video = this.videoSelectorRef.nativeElement;
-    if (this.playerType === 'edit') {
-      const clip = this.clip;
-      this.clipStartInput = clip.start;
-      this.clipEndInput = clip.end;
-      this.video.currentTime = clip.start;
-    }
-  }
-  ngOnChanges() {
-    if (this.metadataLoaded === true) {
-      this.updateTrackerBetween();
-    }
-  }
-  onStartChanges(event) {
-    this.playerService.onChangedLowerRange.emit(event);
-    this.video.currentTime = this.clipStartInput;
-  }
-  onEndChanges(event) {
-    this.playerService.onChangedUpperRange.emit(event);
-    this.video.currentTime = this.clipEndInput;
-  }
-  seekVideo(typeOfInput, event) {
-    const lowerValue = this.clipStartInput;
-    const upperValue = this.clipEndInput;
-    const maxValue = this.videoDuration;
-    switch (typeOfInput) {
-      case ('start'):
-        if (lowerValue < 0 ) {
-          event.target.value = lowerValue;
-        } else if (lowerValue > upperValue) {
-          event.target.value = upperValue;
-        }
-        break;
-      case ('end'):
-        if (upperValue > maxValue) {
-          event.target.value = maxValue;
-        } else if (upperValue < lowerValue) {
-          event.target.value = lowerValue;
-        }
-    }
   }
   defineVideoDuration() {
     // Triggered when the video data is loaded to define max values for the ranges inputs
     this.metadataLoaded = true;
     this.videoDuration = this.video.duration;
-    this.playerService.videoDuration.emit(this.videoDuration);
-    if (this.playerType === 'create') {
-      this.clipStartInput = 0;
-      this.clipEndInput = this.videoDuration;
-    }
+    this.playerService.videoDuration.emit(this.video.duration);
+  }
+  manageVideoTracker() {
+    const ct = this.video.currentTime;
+    this.updateTrackerBetween(ct);
+  }
+  updateTrackerBetween(currentTime: number) {
+    const trackerBetween = this.trackerBetweenRef.nativeElement;
+    const lowerValue = this.clipStart;
+    const width = `${(currentTime / this.videoDuration) * 100}%`;
+    const left = `${lowerValue / this.videoDuration * 100}%`;
+    this.renderer.setStyle(trackerBetween, 'width', width);
+    this.renderer.setStyle(trackerBetween, 'left', left);
+  }
+  updateTrackerRangeClip() {
+    const trackerRangeClip = this.trackerRangeRef.nativeElement;
+    const lowerValue = this.clipStart;
+    const upperValue = this.clipEnd;
+    const width = `${(upperValue - lowerValue) / this.videoDuration * 100}%`;
+    const left = `${lowerValue / this.videoDuration * 100}%`;
+    this.renderer.setStyle(trackerRangeClip, 'width', width);
+    this.renderer.setStyle(trackerRangeClip, 'left', left);
+  }
+  updateClipWidth() {
+    const clipWidth = this.clipWidthRef.nativeElement;
+    const lowerValue = this.clipStart;
+    const upperValue = this.clipEnd;
+    const width = `${(upperValue - lowerValue) / this.videoDuration * 100}%`;
+    const left = `${lowerValue / this.videoDuration * 100}%`;
+    this.renderer.setStyle(clipWidth, 'width', width);
+    this.renderer.setStyle(clipWidth, 'left', left);
+  }
+  changeCurrentTime(event) {
+    const hoverOnPercent = event.offsetX / event.target.clientWidth;
+    console.log(hoverOnPercent);
+    const newTime = hoverOnPercent * this.videoDuration;
+    this.video.currentTime = newTime;
+  }
+  setRangeUI() {
+    this.updateTrackerRangeClip();
+    this. updateClipWidth();
   }
   togglePlay() {
     const video = this.video;
     if (video.paused) {
-      // Replays at start Input position
-      /* video.currentTime = this.clipStartInput; */
       this.video.play();
       this.iconPlayPause = 'fa-pause';
     } else {
       video.pause();
       this.iconPlayPause = 'fa-play';
-    }
-  }
-  updateTrackerBetween() {
-    const trackerBetween = this.trackerBetweenRef.nativeElement;
-    const lowerValue = this.clipStartInput;
-    const upperValue = this.clipEndInput;
-    const width = `${(upperValue - lowerValue) / this.videoDuration * 100}%`;
-    const left = `${lowerValue / this.videoDuration * 100}%`;
-    this.renderer.setStyle(trackerBetween, 'width', width);
-    this.renderer.setStyle(trackerBetween, 'left', left);
-  }
-  manageVideoTracker() {
-    this.updateSelectors();
-    this.updateTrackerBetween();
-  }
-  updateSelectors () {
-    const ct = this.video.currentTime;
-    // Just updates the slider when is playing from the start point
-    if (Math.floor(ct) <= this.clipStartInput + 0.4 ) {
-      this.clipStartInput = ct;
-      this.playerService.onChangedLowerRange.emit(ct);
-    } else {
-      this.clipEndInput = ct;
-      this.playerService.onChangedUpperRange.emit(ct);
-    }
-    if (Math.floor(ct) === this.clipEndInput - 1 ) {
-      this.video.pause();
-      this.iconPlayPause = 'fa-play';
-    }
-  }
-  trackMousePosition(event) {
-    const hoverOnPercent = event.offsetX / event.target.clientWidth;
-    const lowerValue = this.clipStartInput;
-    const upperValue = this.clipEndInput;
-    const closeValue = this.videoDuration / 10;
-    if (
-      upperValue - lowerValue < closeValue &&
-      upperValue > this.videoDuration * .9
-    ) {
-      this.upperStart = true;
-      this.upperEnd = false;
-    } else if (
-      upperValue - lowerValue < closeValue &&
-      lowerValue < this.videoDuration * .1
-    ) {
-      this.upperStart = false;
-      this.upperEnd = true;
-    } else {
-      const middleValue = lowerValue + (upperValue - lowerValue) / 2;
-      if (hoverOnPercent < middleValue / this.videoDuration) {
-        this.upperStart = true;
-        this.upperEnd = false;
-      } else {
-        this.upperStart = false;
-        this.upperEnd = true;
-      }
     }
   }
 
