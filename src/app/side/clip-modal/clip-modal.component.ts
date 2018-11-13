@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import {Clip} from '../../shared/clip.model';
 import { ClipService } from 'src/app/shared/clip.service';
+import { PlayerService } from 'src/app/shared/player.service';
 
 @Component({
   selector: 'app-clip-modal',
@@ -17,7 +18,9 @@ export class ClipModalComponent implements OnInit {
   clipStartInput: number;
   clipEndInput: number;
 
-  constructor(private clipService: ClipService) { }
+  videoDuration: number;
+
+  constructor(private clipService: ClipService, private playerService: PlayerService) { }
 
   ngOnInit() {
     if (this.modalType === 'edit') {
@@ -26,7 +29,23 @@ export class ClipModalComponent implements OnInit {
       this.clipNameInput = clipToEdit.name;
       this.clipStartInput = clipToEdit.start;
       this.clipEndInput = clipToEdit.end;
+    } else {
+      this.clipStartInput = 0;
     }
+    this.playerService.onChangedLowerRange.subscribe(
+      (lowerRange: number) => this.clipStartInput = lowerRange
+    );
+    this.playerService.onChangedUpperRange.subscribe(
+      (upperRange: number) => this.clipEndInput = upperRange
+    );
+    this.playerService.videoDuration.subscribe(
+      (videoDuration: number) => {
+        this.videoDuration = videoDuration;
+        if (this.modalType === 'create') {
+          this.clipEndInput = videoDuration;
+        }
+      }
+    );
   }
   closeModal(): void {
     this.clipService.toggleModal.emit(false);

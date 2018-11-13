@@ -1,5 +1,11 @@
+.video {
+  max-width: 100%;
+}
 .videoControls {
   display: flex;
+  margin: 0 auto;
+  max-width: 854px;
+
 }
 .play-pause {
   width: 6%;
@@ -30,7 +36,7 @@
   height: 10px;
   margin-top: -5px;
   border-radius: 10px;
-  background: LightSalmon;
+  background: #b388ff;
   pointer-events: none;
 }
 
@@ -43,7 +49,7 @@ input[type="range"] {
 }
 
 .displayUpper {
-  z-index: 99 !important;
+  z-index: 1 !important;
 }
 
 input[type="range"]:not(*:root) {
@@ -56,10 +62,9 @@ input[type="range"]::-webkit-slider-runnable-track {
 
 input[type="range"]::-webkit-slider-thumb, input[type="range"]::-webkit-media-slider-thumb {
   appearance: none;
-  width: 20px;
-  height: 20px;
+  width: 10px;
+  height: 22px;
   border: 0;
-  border-radius: 50%;
   pointer-events: auto;
 }
 
@@ -79,10 +84,9 @@ input[type="range"]::-moz-range-track {
 
 input[type="range"]::-moz-range-thumb {
 	appearance: none;
-	width: 20px;
-	height: 20px;
+	width: 10px;
+  height: 22px;
 	border: 0;
-	border-radius: 50%;
 	pointer-events: auto;
 }
 
@@ -103,10 +107,9 @@ input[type="range"]::-ms-track {
 
 input[type="range"]::-ms-thumb {
   appearance: none;
-  width: 20px;
-  height: 20px;
+  width: 10px;
+  height: 22px;
   border: 0;
-  border-radius: 50%;
 }
 
 input[name="range-lower"]::-ms-thumb {

@@ -9,9 +9,12 @@
       </header>
       <section class="modal-card-body">
         <div class="field">
-            <app-video-player
+          <app-video-player
             [playerType]="modalType"
-            ></app-video-player>
+            [clip]="clipToEdit"
+            [clipStartInput]="clipStartInput"
+            [clipEndInput]="clipEndInput"
+          ></app-video-player>
         </div>
         <div class="field is-horizontal">
           <div class="field-label is-normal">

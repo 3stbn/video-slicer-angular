@@ -1,38 +1,42 @@
-<div class="video-box">
-  <video #videoSelector
-  (loadedmetadata)="defineVideoDuration()"
-  (timeupdate)="updateSelectors()"
-  >
-    <source src="http://grochtdreis.de/fuer-jsfiddle/video/sintel_trailer-480.mp4" type="video/mp4">
-  </video>
-</div>
-<div class="videoControls">
-  <div class="play-pause"
-  (click)="togglePlay()"
-  >
-      <span class="icon has-text-primary">
-        <i [ngClass]="[iconPlayPause, 'fas', 'fa-lg']"></i>                  
-      </span>
+<div class="video">
+  <div class="video-box">
+    <video #videoSelector
+    (loadedmetadata)="defineVideoDuration()"
+    (timeupdate)="manageVideoTracker()"
+    >
+      <source src="http://grochtdreis.de/fuer-jsfiddle/video/sintel_trailer-480.mp4" type="video/mp4">
+    </video>
   </div>
-  <div class="input-range-container">
-    <div class="input-range-tracker"></div>
-    <div class="input-range-tracker-between"></div>
-    <input type="range" min="0" name="range-lower" id="range-lower"
-    [ngClass]="{'displayUpper': upperStart}"
-    (mouseenter)="trackMousePosition($event)"
-    (mousemove)="trackMousePosition($event)"
-    [max]="videoDuration"
-    [(ngModel)]="clipStartInput"
-    (change)="seekVideo('start')"
+  <div class="videoControls">
+    <div class="play-pause"
+    (click)="togglePlay()"
     >
-    <input type="range" name="range-upper" id="range-upper"
-    min="0"
-    [ngClass]="{'displayUpper': upperEnd}"
-    (mouseenter)="trackMousePosition($event)"
-    (mousemove)="trackMousePosition($event)"
-    [max]="videoDuration"
-    [(ngModel)]="clipEndInput"
-    (change)="seekVideo('end')"        
-    >
+        <span class="icon has-text-primary">
+          <i [ngClass]="[iconPlayPause, 'fas', 'fa-lg']"></i>                  
+        </span>
+    </div>
+    <div class="input-range-container">
+      <div class="input-range-tracker"></div>
+      <div class="input-range-tracker-between" #trackerBetween></div>
+      <input type="range" min="0" name="range-lower" id="range-lower"
+      [ngClass]="{'displayUpper': upperStart}"
+      (mouseenter)="trackMousePosition($event)"
+      (mousemove)="trackMousePosition($event)"
+      [max]="videoDuration"
+      [(ngModel)]="clipStartInput"
+      (ngModelChange)="onStartChanges($event)"
+      (input)="seekVideo('start', $event)"
+      >
+      <input type="range" name="range-upper" id="range-upper"
+      min="0"
+      [ngClass]="{'displayUpper': upperEnd}"
+      (mouseenter)="trackMousePosition($event)"
+      (mousemove)="trackMousePosition($event)"
+      [max]="videoDuration"
+      [(ngModel)]="clipEndInput"
+      (ngModelChange)="onEndChanges($event)"
+      (input)="seekVideo('end',$event)"
+      >
+    </div>
   </div>
 </div>

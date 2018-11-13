@@ -1,6 +1,7 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, Renderer2, OnChanges } from '@angular/core';
 import { ClipService } from '../shared/clip.service';
 import { Clip } from '../shared/clip.model';
+import { PlayerService } from '../shared/player.service';
 
 @Component({
   selector: 'app-video-player',
@@ -8,22 +9,25 @@ import { Clip } from '../shared/clip.model';
   styleUrls: ['./video-player.component.css']
 })
 
-export class VideoPlayerComponent implements OnInit {
+export class VideoPlayerComponent implements OnInit, OnChanges {
   @Input() playerType: string;
   @Input() clip: Clip;
 
   @ViewChild('videoSelector') videoSelectorRef: ElementRef;
   video: HTMLVideoElement;
 
+  @ViewChild('trackerBetween') trackerBetweenRef: ElementRef;
+
   upperStart: boolean;
   upperEnd: boolean;
   videoDuration: number;
   iconPlayPause = 'fa-play';
+  metadataLoaded: boolean;
 
-  clipStartInput: number;
-  clipEndInput: number;
+  @Input() clipStartInput: number;
+  @Input() clipEndInput: number;
 
-  constructor(private clipService: ClipService) { }
+  constructor(private playerService: PlayerService, private renderer: Renderer2) { }
 
   ngOnInit() {
     this.video = this.videoSelectorRef.nativeElement;
@@ -34,24 +38,44 @@ export class VideoPlayerComponent implements OnInit {
       this.video.currentTime = clip.start;
     }
   }
-  seekVideo(typeOfInput) {
-    if (typeOfInput === 'start') {
-      if (this.clipStartInput >= this.clipEndInput) {
-        this.clipStartInput = this.clipEndInput - 1 ;
-      }
-      const startInput = this.clipStartInput;
-      this.video.currentTime = startInput;
-    } else {
-      if (this.clipEndInput < this.clipStartInput) {
-        this.clipEndInput = this.clipStartInput + 1 ;
-      }
-      const endInput = this.clipEndInput;
-      this.video.currentTime = endInput;
+  ngOnChanges() {
+    if (this.metadataLoaded === true) {
+      this.updateTrackerBetween();
+    }
+  }
+  onStartChanges(event) {
+    this.playerService.onChangedLowerRange.emit(event);
+    this.video.currentTime = this.clipStartInput;
+  }
+  onEndChanges(event) {
+    this.playerService.onChangedUpperRange.emit(event);
+    this.video.currentTime = this.clipEndInput;
+  }
+  seekVideo(typeOfInput, event) {
+    const lowerValue = this.clipStartInput;
+    const upperValue = this.clipEndInput;
+    const maxValue = this.videoDuration;
+    switch (typeOfInput) {
+      case ('start'):
+        if (lowerValue < 0 ) {
+          event.target.value = lowerValue;
+        } else if (lowerValue > upperValue) {
+          event.target.value = upperValue;
+        }
+        break;
+      case ('end'):
+        if (upperValue > maxValue) {
+          event.target.value = maxValue;
+        } else if (upperValue < lowerValue) {
+          event.target.value = lowerValue;
+        }
     }
   }
   defineVideoDuration() {
     // Triggered when the video data is loaded to define max values for the ranges inputs
+    this.metadataLoaded = true;
     this.videoDuration = this.video.duration;
+    this.playerService.videoDuration.emit(this.videoDuration);
     if (this.playerType === 'create') {
       this.clipStartInput = 0;
       this.clipEndInput = this.videoDuration;
@@ -69,13 +93,28 @@ export class VideoPlayerComponent implements OnInit {
       this.iconPlayPause = 'fa-play';
     }
   }
+  updateTrackerBetween() {
+    const trackerBetween = this.trackerBetweenRef.nativeElement;
+    const lowerValue = this.clipStartInput;
+    const upperValue = this.clipEndInput;
+    const width = `${(upperValue - lowerValue) / this.videoDuration * 100}%`;
+    const left = `${lowerValue / this.videoDuration * 100}%`;
+    this.renderer.setStyle(trackerBetween, 'width', width);
+    this.renderer.setStyle(trackerBetween, 'left', left);
+  }
+  manageVideoTracker() {
+    this.updateSelectors();
+    this.updateTrackerBetween();
+  }
   updateSelectors () {
     const ct = this.video.currentTime;
     // Just updates the slider when is playing from the start point
     if (Math.floor(ct) <= this.clipStartInput + 0.4 ) {
       this.clipStartInput = ct;
+      this.playerService.onChangedLowerRange.emit(ct);
     } else {
       this.clipEndInput = ct;
+      this.playerService.onChangedUpperRange.emit(ct);
     }
     if (Math.floor(ct) === this.clipEndInput - 1 ) {
       this.video.pause();
