@@ -1,35 +1,49 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PlayerService } from '../shared/player.service';
 import { Clip } from '../shared/clip.model';
+import { Subscription } from 'rxjs';
+import { MainVideoService } from '../shared/mainVideo.service';
 @Component({
   selector: 'app-preview',
   templateUrl: './preview.component.html',
   styleUrls: ['./preview.component.css']
 })
-export class PreviewComponent implements OnInit {
+export class PreviewComponent implements OnInit, OnDestroy {
 
-  videoSource = 'https://media.w3.org/2010/05/sintel/trailer.mp4';
+  videoSource: string;
   clipStart = 0;
   clipEnd: number;
-  clipName = 'Main Video';
+  clipName: string;
   playType = 'default';
-  constructor(private playerService: PlayerService) { }
+
+  // Subscriptions
+
+  videoDurationSubscription: Subscription;
+  selectedClipSubscription: Subscription;
+
+  constructor(private playerService: PlayerService, private mainVideoService: MainVideoService) { }
 
   ngOnInit() {
-    this.playerService.videoDuration.subscribe(
+    // Starts with main video
+    this.videoSource = this.mainVideoService.getSource();
+    this.clipName = this.mainVideoService.getName();
+    // Duration of main video
+    this.videoDurationSubscription = this.playerService.videoDuration.subscribe(
       (videoDuration: number) => this.clipEnd = videoDuration
     );
-    this.playerService.selectClip.subscribe(
+    // Changes when a clip was selected
+    this.selectedClipSubscription = this.playerService.selectClip.subscribe(
       (clip: Clip) => {
         this.clipStart = clip.start;
         this.clipEnd = clip.end;
         this.clipName = clip.name;
-        this.videoSource = `https://media.w3.org/2010/05/sintel/trailer.mp4#t=${clip.start},${clip.end}`;
+        this.videoSource = `${this.videoSource}#t=${clip.start},${clip.end}`;
         this.playType = 'clip';
       }
     );
   }
-  pauseVideo() {
-    console.log('pausar');
+  ngOnDestroy() {
+    this.videoDurationSubscription.unsubscribe();
+    this.selectedClipSubscription.unsubscribe();
   }
 }

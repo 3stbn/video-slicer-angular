@@ -19,14 +19,14 @@ export class ClipsComponent implements OnInit {
 
   deleteCLipEmmiter() {
     this.clipService.deleteClip(this.clip.id);
-    this.playerService.selectClip.emit(new Clip('Main Video', 0, 52 ));
+    this.playerService.selectClip.next(new Clip('Main Video', 0, 52 ));
   }
   editCLipEmmiter() {
-    this.clipService.toggleModal.emit(true);
-    this.clipService.modalType.emit('edit');
-    this.clipService.clipToEdit.emit(this.clip);
+    this.clipService.toggleModal.next(true);
+    this.clipService.modalType.next('edit');
+    this.clipService.clipToEdit.next(this.clip);
   }
   selectClip() {
-    this.playerService.selectClip.emit(this.clip);
+    this.playerService.selectClip.next(this.clip);
   }
 }

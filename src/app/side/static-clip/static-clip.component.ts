@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PlayerService } from 'src/app/shared/player.service';
 import { Clip } from 'src/app/shared/clip.model';
+import { MainVideoService } from 'src/app/shared/mainVideo.service';
 
 @Component({
   selector: 'app-static-clip',
@@ -9,15 +10,18 @@ import { Clip } from 'src/app/shared/clip.model';
 })
 export class StaticClipComponent implements OnInit {
 
-  constructor(private playerService: PlayerService) { }
+  constructor(private playerService: PlayerService, private mainVideoService: MainVideoService) { }
 
-  clip: Clip;
+  mainVideoDuration: number;
+  mainVideoName: string;
 
   ngOnInit() {
-    this.clip = new Clip('Main Video', 0, 52 );
+    this.mainVideoName = this.mainVideoService.getName();
+    this.playerService.videoDuration.subscribe(
+      (videoDuration: number) => this.mainVideoDuration = videoDuration
+    );
   }
   selectClip() {
-    this.playerService.selectClip.emit(this.clip);
+    this.playerService.selectClip.next(new Clip(this.mainVideoName, 0, this.mainVideoDuration ));
   }
-
 }

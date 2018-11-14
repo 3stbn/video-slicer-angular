@@ -42,11 +42,11 @@ export class VideoEditorComponent implements OnInit, OnChanges {
     }
   }
   onStartChanges(event) {
-    this.playerService.onChangedLowerRange.emit(event);
+    this.playerService.onChangedLowerRange.next(event);
     this.video.currentTime = this.clipStartInput;
   }
   onEndChanges(event) {
-    this.playerService.onChangedUpperRange.emit(event);
+    this.playerService.onChangedUpperRange.next(event);
     this.video.currentTime = this.clipEndInput;
   }
   seekVideo(typeOfInput, event) {
@@ -73,7 +73,7 @@ export class VideoEditorComponent implements OnInit, OnChanges {
     // Triggered when the video data is loaded to define max values for the ranges inputs
     this.metadataLoaded = true;
     this.videoDuration = this.video.duration;
-    this.playerService.videoDuration.emit(this.videoDuration);
+    this.playerService.videoDuration.next(this.videoDuration);
     if (this.playerType === 'create') {
       this.clipStartInput = 0;
       this.clipEndInput = this.videoDuration;
@@ -109,10 +109,10 @@ export class VideoEditorComponent implements OnInit, OnChanges {
     // Just updates the slider when is playing from the start point
     if (Math.floor(ct) <= this.clipStartInput + 0.4 ) {
       this.clipStartInput = ct;
-      this.playerService.onChangedLowerRange.emit(ct);
+      this.playerService.onChangedLowerRange.next(ct);
     } else {
       this.clipEndInput = ct;
-      this.playerService.onChangedUpperRange.emit(ct);
+      this.playerService.onChangedUpperRange.next(ct);
     }
     if (Math.floor(ct) === this.clipEndInput - 1 ) {
       this.video.pause();

@@ -1,14 +1,16 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import {Clip} from '../../shared/clip.model';
 import { ClipService } from 'src/app/shared/clip.service';
 import { PlayerService } from 'src/app/shared/player.service';
+import { Subscription } from 'rxjs';
+import { MainVideoService } from 'src/app/shared/mainVideo.service';
 
 @Component({
   selector: 'app-clip-modal',
   templateUrl: './clip-modal.component.html',
   styleUrls: ['./clip-modal.component.css']
 })
-export class ClipModalComponent implements OnInit {
+export class ClipModalComponent implements OnInit, OnDestroy {
 
   @Input() modalType: string;
   @Input() clipToEdit: Clip;
@@ -19,8 +21,16 @@ export class ClipModalComponent implements OnInit {
   clipEndInput: number;
 
   videoDuration: number;
+  videoSource: string;
 
-  constructor(private clipService: ClipService, private playerService: PlayerService) { }
+  // Subscriptions
+  lowerChangeSubscription: Subscription;
+  upperChangeSubscription: Subscription;
+  videoDurationSubscription: Subscription;
+
+  constructor(private clipService: ClipService,
+              private playerService: PlayerService,
+              private mainVideoService: MainVideoService) { }
 
   ngOnInit() {
     if (this.modalType === 'edit') {
@@ -31,14 +41,15 @@ export class ClipModalComponent implements OnInit {
       this.clipEndInput = clipToEdit.end;
     } else {
       this.clipStartInput = 0;
+      this.videoSource = this.mainVideoService.getSource();
     }
-    this.playerService.onChangedLowerRange.subscribe(
+    this.lowerChangeSubscription =  this.playerService.onChangedLowerRange.subscribe(
       (lowerRange: number) => this.clipStartInput = lowerRange
     );
-    this.playerService.onChangedUpperRange.subscribe(
+    this.upperChangeSubscription = this.playerService.onChangedUpperRange.subscribe(
       (upperRange: number) => this.clipEndInput = upperRange
     );
-    this.playerService.videoDuration.subscribe(
+    this.videoDurationSubscription = this.playerService.videoDuration.subscribe(
       (videoDuration: number) => {
         this.videoDuration = videoDuration;
         if (this.modalType === 'create') {
@@ -47,8 +58,13 @@ export class ClipModalComponent implements OnInit {
       }
     );
   }
+  ngOnDestroy() {
+    this.lowerChangeSubscription.unsubscribe();
+    this.upperChangeSubscription.unsubscribe();
+    this.videoDurationSubscription.unsubscribe();
+  }
   closeModal(): void {
-    this.clipService.toggleModal.emit(false);
+    this.clipService.toggleModal.next(false);
   }
   onSaveClip() {
     switch (this.modalType) {
@@ -56,13 +72,13 @@ export class ClipModalComponent implements OnInit {
         const clip = new Clip(this.clipNameInput, this.clipStartInput, this.clipEndInput);
         this.clipService.addCLip(clip);
         this.closeModal();
-        this.playerService.selectClip.emit(clip);
+        this.playerService.selectClip.next(clip);
         break;
       case('edit'):
         const clipEdited = new Clip(this.clipNameInput, this.clipStartInput, this.clipEndInput);
         this.clipService.editClip(clipEdited, this.clipId);
         this.closeModal();
-        this.playerService.selectClip.emit(clipEdited);
+        this.playerService.selectClip.next(clipEdited);
     }
   }
 }

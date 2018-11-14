@@ -41,7 +41,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
     // Triggered when the video data is loaded to define max values for the ranges inputs
     this.metadataLoaded = true;
     this.videoDuration = this.video.duration;
-    this.playerService.videoDuration.emit(this.video.duration);
+    this.playerService.videoDuration.next(this.video.duration);
   }
   manageVideoTracker() {
     const ct = this.video.currentTime;
