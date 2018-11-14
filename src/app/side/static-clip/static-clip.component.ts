@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { PlayerService } from 'src/app/shared/player.service';
+import { Clip } from 'src/app/shared/clip.model';
 
 @Component({
   selector: 'app-static-clip',
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StaticClipComponent implements OnInit {
 
-  constructor() { }
+  constructor(private playerService: PlayerService) { }
+
+  clip: Clip;
 
   ngOnInit() {
+    this.clip = new Clip('Main Video', 0, 52 );
+  }
+  selectClip() {
+    this.playerService.selectClip.emit(this.clip);
   }
 
 }

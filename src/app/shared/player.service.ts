@@ -6,6 +6,5 @@ export class PlayerService {
   onChangedUpperRange = new EventEmitter<number>();
   videoDuration = new EventEmitter<number>();
 
-  playClip = new EventEmitter<Clip>();
-  playNotifier = new EventEmitter<boolean>();
+  selectClip = new EventEmitter<Clip>();
 }

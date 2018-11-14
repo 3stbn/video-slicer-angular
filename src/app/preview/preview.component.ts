@@ -11,6 +11,7 @@ export class PreviewComponent implements OnInit {
   videoSource = 'https://media.w3.org/2010/05/sintel/trailer.mp4';
   clipStart = 0;
   clipEnd: number;
+  clipName = 'Main Video';
   playType = 'default';
   constructor(private playerService: PlayerService) { }
 
@@ -18,10 +19,11 @@ export class PreviewComponent implements OnInit {
     this.playerService.videoDuration.subscribe(
       (videoDuration: number) => this.clipEnd = videoDuration
     );
-    this.playerService.playClip.subscribe(
+    this.playerService.selectClip.subscribe(
       (clip: Clip) => {
         this.clipStart = clip.start;
         this.clipEnd = clip.end;
+        this.clipName = clip.name;
         this.videoSource = `https://media.w3.org/2010/05/sintel/trailer.mp4#t=${clip.start},${clip.end}`;
         this.playType = 'clip';
       }

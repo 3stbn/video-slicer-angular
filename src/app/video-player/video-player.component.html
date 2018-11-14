@@ -1,9 +1,8 @@
-<div class="video">
-  <div class="video-box">
+<div class="video" style="width: 70%; margin: auto">
+  <div class="video-box" >
     <video #videoSelector
     (loadedmetadata)="defineVideoDuration()"
     (timeupdate)="manageVideoTracker()"
-    (canplay)="canPlay()"
     >
       <source [src]="videoSource"type="video/mp4">
     </video>

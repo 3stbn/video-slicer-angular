@@ -29,16 +29,12 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.video = this.videoSelectorRef.nativeElement;
   }
-  ngOnChanges(changes) {
+  ngOnChanges() {
     if (this.metadataLoaded === true) {
       this.video.currentTime = this.clipStart;
       this.updateTrackerBetween(this.video.currentTime);
       this.updateClipWidth();
       this.updateTrackerRangeClip();
-      if (changes.playNotifier) {
-        console.log(changes.playNotifier);
-        this.togglePlay();
-      }
     }
   }
   defineVideoDuration() {
@@ -66,9 +62,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
     this.renderer.setStyle(trackerBetween, 'width', width);
     this.renderer.setStyle(trackerBetween, 'left', left);
   }
-  canPlay() {
-    this.playerService.playNotifier.subscribe((play: boolean) => this.togglePlay());
-  }
+
   // Gray bar for the Range of the Clip
   updateTrackerRangeClip() {
     const trackerRangeClip = this.trackerRangeRef.nativeElement;
@@ -95,10 +89,6 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
     const clipDuration = this.clipEnd - this.clipStart;
     const timeInClip = hoverOnPercent * clipDuration;
     this.video.currentTime = timeInClip + this.clipStart;
-  }
-  setRangeUI() {
-    this.updateTrackerRangeClip();
-    this. updateClipWidth();
   }
   togglePlay() {
     const video = this.video;

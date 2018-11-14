@@ -56,11 +56,13 @@ export class ClipModalComponent implements OnInit {
         const clip = new Clip(this.clipNameInput, this.clipStartInput, this.clipEndInput);
         this.clipService.addCLip(clip);
         this.closeModal();
+        this.playerService.selectClip.emit(clip);
         break;
       case('edit'):
         const clipEdited = new Clip(this.clipNameInput, this.clipStartInput, this.clipEndInput);
         this.clipService.editClip(clipEdited, this.clipId);
         this.closeModal();
+        this.playerService.selectClip.emit(clipEdited);
     }
   }
 }
