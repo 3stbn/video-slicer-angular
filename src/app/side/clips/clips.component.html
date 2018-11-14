@@ -1,16 +1,21 @@
 <div class="card">
   <header class="card-header">
-    <p class="card-header-title">
-      {{clip.name}}
+    <p class="card-header-title has-text-grey-light">
+      Start:  {{clip.start}} - End: {{clip.end}}
     </p>
   </header>
   <div class="card-content">
     <div class="media">
       <div class="media-content">
-        <p class="title is-5">{{clip.name}}</p>
-        <p class="subtitle is-6">{{clip.start}} - {{clip.end}}</p>
-      </div>
-      <div class="media-right">
+        <p class="title is-4 has-text-info" >{{clip.name}}</p>
+        <span class="tag is-success">
+            Bar
+          <button class="delete is-small"></button>
+        </span>
+        <span class="tag is-success">
+            Bar
+          <button class="delete is-small"></button>
+        </span>
         <span class="tag is-success">
             Bar
           <button class="delete is-small"></button>
@@ -20,7 +25,7 @@
   </div>
   <footer class="card-footer">
     <a class="card-footer-item"
-    >
+    (click)="playClip()">
     Play</a>
     <a class="card-footer-item"
     (click)="editCLipEmmiter()">

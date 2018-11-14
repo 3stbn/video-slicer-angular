@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {Clip} from '../../shared/clip.model';
 import { ClipService } from 'src/app/shared/clip.service';
+import { PlayerService } from 'src/app/shared/player.service';
 
 @Component({
   selector: 'app-clips',
@@ -11,17 +12,21 @@ export class ClipsComponent implements OnInit {
 
   @Input() clip: Clip;
 
-  constructor(private clipService: ClipService) { }
+  constructor(private clipService: ClipService, private playerService: PlayerService) { }
 
   ngOnInit() {
   }
 
-  deleteCLipEmmiter(): void {
+  deleteCLipEmmiter() {
     this.clipService.deleteClip(this.clip.id);
   }
-  editCLipEmmiter(): void {
+  editCLipEmmiter() {
     this.clipService.toggleModal.emit(true);
     this.clipService.modalType.emit('edit');
     this.clipService.clipToEdit.emit(this.clip);
+  }
+  playClip() {
+    this.playerService.playClip.emit(this.clip);
+    this.playerService.playNotifier.emit(true);
   }
 }

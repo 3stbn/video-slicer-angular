@@ -3,7 +3,7 @@
     <video #videoSelector
     (loadedmetadata)="defineVideoDuration()"
     (timeupdate)="manageVideoTracker()"
-    (canplay)="setRangeUI()"
+    (canplay)="canPlay()"
     >
       <source [src]="videoSource"type="video/mp4">
     </video>
