@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, Renderer2, ChangeDetectionStrategy, OnChanges } from '@angular/core';
 import { PlayerService } from '../shared/player.service';
 import { MainVideoService } from '../shared/mainVideo.service';
+import { ClipService } from '../shared/clip.service';
 
 @Component({
   selector: 'app-video-player',
@@ -13,6 +14,8 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
   @Input() playType: string;
   @Input() clipStart: number;
   @Input() clipEnd: number;
+
+  @Input() clipId: number;
 
   iconPlayPause = 'fa-play';
   videoDuration: number;
@@ -27,6 +30,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
 
   constructor(private playerService: PlayerService,
               private renderer: Renderer2,
+              private clipService: ClipService,
               private mainVideoService: MainVideoService) { }
 
   ngOnInit() {
@@ -56,7 +60,13 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
     if (Math.floor(currentTime) === Math.floor(this.clipEnd)) {
       this.video.pause();
       this.iconPlayPause = 'fa-play';
+      if (this.playType === 'clip') {
+        this.playNextClip();
+      }
     }
+  }
+  playNextClip() {
+    this.clipService.playNextClip(this.clipId);
   }
   updateTrackerBetween(currentTime: number) {
     const trackerBetween = this.trackerBetweenRef.nativeElement;
@@ -106,5 +116,10 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
       this.iconPlayPause = 'fa-play';
     }
   }
-
+  handleAutoPlay() {
+   this.playerService.playNotifier.subscribe(() => {
+    this.video.play();
+    this.iconPlayPause = 'fa-pause';
+   });
+  }
 }

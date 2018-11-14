@@ -1,7 +1,11 @@
 import { Clip } from './clip.model';
 import { Subject } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { PlayerService } from './player.service';
 
+@Injectable()
 export class ClipService {
+  constructor(private playerService: PlayerService) { }
   private clips: Clip[] = [];
 
   clipsChanged = new Subject<Clip[]>();
@@ -27,6 +31,14 @@ export class ClipService {
     const index = this.clips.findIndex((x) => x.id === id);
     this.clips.splice( index, 1);
     this.clipsChanged.next(this.clips.slice());
+  }
+  playNextClip(id: number) {
+    const lastClip = this.clips.length - 1 ;
+    const index = this.clips.findIndex((x) => x.id === id);
+    if (index !== lastClip ) {
+      this.playerService.selectClip.next(this.clips[index + 1]);
+      this.playerService.playNotifier.next();
+    }
   }
 }
 

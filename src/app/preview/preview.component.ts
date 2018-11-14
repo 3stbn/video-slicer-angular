@@ -15,6 +15,7 @@ export class PreviewComponent implements OnInit, OnDestroy {
   clipEnd: number;
   clipName: string;
   playType = 'default';
+  clipId: number;
 
   // Subscriptions
 
@@ -39,6 +40,7 @@ export class PreviewComponent implements OnInit, OnDestroy {
         this.clipName = clip.name;
         this.videoSource = `${this.videoSource}#t=${clip.start},${clip.end}`;
         this.playType = 'clip';
+        this.clipId = clip.id;
       }
     );
   }

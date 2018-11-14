@@ -7,4 +7,6 @@ export class PlayerService {
   videoDuration = new Subject<number>();
 
   selectClip = new Subject<Clip>();
+
+  playNotifier = new Subject();
 }

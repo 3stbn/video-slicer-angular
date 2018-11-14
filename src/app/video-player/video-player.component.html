@@ -3,6 +3,7 @@
     <video #videoSelector
     (loadedmetadata)="defineVideoDuration()"
     (timeupdate)="manageVideoTracker()"
+    (canplaythrough)="handleAutoPlay()"
     >
       <source [src]="videoSource"type="video/mp4">
     </video>
