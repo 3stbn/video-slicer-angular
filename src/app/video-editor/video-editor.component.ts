@@ -10,6 +10,9 @@ import { PlayerService } from '../shared/player.service';
 export class VideoEditorComponent implements OnInit, OnChanges {
   @Input() playerType: string;
   @Input() clip: Clip;
+  @Input() clipStartInput: number;
+  @Input() clipEndInput: number;
+  @Input() videoSource: string;
 
   @ViewChild('videoSelector') videoSelectorRef: ElementRef;
   video: HTMLVideoElement;
@@ -22,8 +25,7 @@ export class VideoEditorComponent implements OnInit, OnChanges {
   iconPlayPause = 'fa-play';
   metadataLoaded: boolean;
 
-  @Input() clipStartInput: number;
-  @Input() clipEndInput: number;
+
 
   constructor(private playerService: PlayerService, private renderer: Renderer2) { }
 

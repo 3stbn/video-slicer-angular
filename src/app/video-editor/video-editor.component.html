@@ -4,7 +4,7 @@
     (loadedmetadata)="defineVideoDuration()"
     (timeupdate)="manageVideoTracker()"
     >
-      <source src="https://media.w3.org/2010/05/sintel/trailer.mp4" type="video/mp4">
+      <source [src]="videoSource" type="video/mp4">
     </video>
   </div>
   <div class="videoControls">

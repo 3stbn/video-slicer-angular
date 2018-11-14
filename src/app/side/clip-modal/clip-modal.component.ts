@@ -33,15 +33,16 @@ export class ClipModalComponent implements OnInit, OnDestroy {
               private mainVideoService: MainVideoService) { }
 
   ngOnInit() {
+    this.videoSource = this.mainVideoService.getSource();
     if (this.modalType === 'edit') {
       const clipToEdit = this.clipToEdit;
       this.clipId = clipToEdit.id;
       this.clipNameInput = clipToEdit.name;
       this.clipStartInput = clipToEdit.start;
       this.clipEndInput = clipToEdit.end;
+      this.videoSource = `${this.videoSource}#t=${clipToEdit.start},${clipToEdit.end}`;
     } else {
       this.clipStartInput = 0;
-      this.videoSource = this.mainVideoService.getSource();
     }
     this.lowerChangeSubscription =  this.playerService.onChangedLowerRange.subscribe(
       (lowerRange: number) => this.clipStartInput = lowerRange
