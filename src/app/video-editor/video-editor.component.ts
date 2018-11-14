@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, Renderer2, OnChanges } from '@angular/core';
 import { Clip } from '../shared/clip.model';
 import { PlayerService } from '../shared/player.service';
+import { MainVideoService } from '../shared/mainVideo.service';
 
 @Component({
   selector: 'app-video-editor',
@@ -25,9 +26,9 @@ export class VideoEditorComponent implements OnInit, OnChanges {
   iconPlayPause = 'fa-play';
   metadataLoaded: boolean;
 
-
-
-  constructor(private playerService: PlayerService, private renderer: Renderer2) { }
+  constructor(private playerService: PlayerService,
+              private renderer: Renderer2,
+              private mainVideoService: MainVideoService) { }
 
   ngOnInit() {
     this.video = this.videoSelectorRef.nativeElement;
@@ -76,6 +77,7 @@ export class VideoEditorComponent implements OnInit, OnChanges {
     this.metadataLoaded = true;
     this.videoDuration = this.video.duration;
     this.playerService.videoDuration.next(this.videoDuration);
+    this.mainVideoService.updateVideoDuration(this.videoDuration);
     if (this.playerType === 'create') {
       this.clipStartInput = 0;
       this.clipEndInput = this.videoDuration;

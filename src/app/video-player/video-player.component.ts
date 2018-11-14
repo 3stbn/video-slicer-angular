@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, Renderer2, ChangeDetectionStrategy, OnChanges } from '@angular/core';
 import { PlayerService } from '../shared/player.service';
+import { MainVideoService } from '../shared/mainVideo.service';
 
 @Component({
   selector: 'app-video-player',
@@ -24,7 +25,9 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
   @ViewChild ('trackRangeClip') trackerRangeRef: ElementRef;
   @ViewChild ('clipWidth') clipWidthRef: ElementRef;
 
-  constructor(private playerService: PlayerService, private renderer: Renderer2) { }
+  constructor(private playerService: PlayerService,
+              private renderer: Renderer2,
+              private mainVideoService: MainVideoService) { }
 
   ngOnInit() {
     this.video = this.videoSelectorRef.nativeElement;
@@ -42,6 +45,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
     this.metadataLoaded = true;
     this.videoDuration = this.video.duration;
     this.playerService.videoDuration.next(this.video.duration);
+    this.mainVideoService.updateVideoDuration(this.videoDuration);
   }
   manageVideoTracker() {
     const ct = this.video.currentTime;

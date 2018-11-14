@@ -3,7 +3,6 @@ import { Subject } from 'rxjs';
 
 export class ClipService {
   private clips: Clip[] = [];
-  private mainVideo = 'https://media.w3.org/2010/05/sintel/trailer.mp4';
 
   clipsChanged = new Subject<Clip[]>();
   clipToEdit = new Subject<Clip>();
@@ -13,9 +12,7 @@ export class ClipService {
   public getClips() {
     return this.clips.slice();
   }
-  public getMainVideo() {
-    return this.mainVideo;
-  }
+
   addCLip(clip: Clip) {
     clip.id = this.clips.length + 1;
     this.clips.push(clip);

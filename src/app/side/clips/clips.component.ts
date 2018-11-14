@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import {Clip} from '../../shared/clip.model';
 import { ClipService } from 'src/app/shared/clip.service';
 import { PlayerService } from 'src/app/shared/player.service';
+import { MainVideoService } from 'src/app/shared/mainVideo.service';
 
 @Component({
   selector: 'app-clips',
@@ -12,14 +13,19 @@ export class ClipsComponent implements OnInit {
 
   @Input() clip: Clip;
 
-  constructor(private clipService: ClipService, private playerService: PlayerService) { }
+  constructor(private clipService: ClipService,
+              private playerService: PlayerService,
+              private mainVideoService: MainVideoService) { }
 
   ngOnInit() {
   }
 
   deleteCLipEmmiter() {
     this.clipService.deleteClip(this.clip.id);
-    this.playerService.selectClip.next(new Clip('Main Video', 0, 52 ));
+    // Returns Player to the start
+    this.playerService.selectClip.next(new Clip(
+      this.mainVideoService.getName(), 0 , this.mainVideoService.getVideoDuration()
+    ));
   }
   editCLipEmmiter() {
     this.clipService.toggleModal.next(true);
