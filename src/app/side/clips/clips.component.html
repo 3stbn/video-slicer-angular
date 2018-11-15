@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" style="margin: 5px 0">
   <header class="card-header">
     <p class="card-header-title has-text-grey-light">
       Start:  {{clip.start}} - End: {{clip.end}}
@@ -8,17 +8,8 @@
     <div class="media">
       <div class="media-content">
         <p class="title is-4 has-text-info" >{{clip.name}}</p>
-        <span class="tag is-success">
-            Bar
-          <button class="delete is-small"></button>
-        </span>
-        <span class="tag is-success">
-            Bar
-          <button class="delete is-small"></button>
-        </span>
-        <span class="tag is-success">
-            Bar
-          <button class="delete is-small"></button>
+        <span class="tag is-info" *ngFor="let tag of clip.tags" style="margin: 0 4px">
+            {{tag}}
         </span>
       </div>
     </div>

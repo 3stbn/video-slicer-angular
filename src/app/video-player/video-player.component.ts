@@ -1,8 +1,7 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, Renderer2, ChangeDetectionStrategy, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, Renderer2, OnChanges } from '@angular/core';
 import { PlayerService } from '../shared/player.service';
 import { MainVideoService } from '../shared/mainVideo.service';
 import { ClipService } from '../shared/clip.service';
-import { deflateSync } from 'zlib';
 
 @Component({
   selector: 'app-video-player',

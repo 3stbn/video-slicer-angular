@@ -6,8 +6,8 @@ import { PlayerService } from './player.service';
 @Injectable()
 export class ClipService  {
   constructor(private playerService: PlayerService) {
-    for (let i = 1; i <= 8; i ++) {
-      this.addCLip(new Clip(`Test${i}`, i , i + 4));
+    for (let i = 1; i <= 4; i ++) {
+      this.addCLip(new Clip(`Test${i}`, i , i + 4, [`Tag ${i}`, `Tag ${i + 1}` ]));
     }
   }
   private clips: Clip[] = [];
@@ -46,6 +46,22 @@ export class ClipService  {
     this.playerService.selectClip.next(this.clips[index + 1]);
     console.log('Index actual' + index);
     this.playerService.playNotifier.next();
+  }
+  filterClipsByTag(input: string) {
+    const term = input.toLowerCase();
+    const arrayIndexResult = [];
+    this.clips.forEach((clip) => {
+      clip.tags.forEach((tag) => {
+        if (tag.toLowerCase().indexOf(term) !== -1 ) {
+          const indexResult = this.clips.indexOf(clip);
+          if (!arrayIndexResult.includes(indexResult)) {
+            arrayIndexResult.push(indexResult);
+          }
+        }
+      });
+    });
+    const filterResult = arrayIndexResult.map((item) => this.clips[item]);
+    this.clipsChanged.next(filterResult);
   }
 }
 

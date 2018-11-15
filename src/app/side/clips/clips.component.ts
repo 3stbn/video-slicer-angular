@@ -24,7 +24,7 @@ export class ClipsComponent implements OnInit {
     this.clipService.deleteClip(this.clip.id);
     // Returns Player to the start
     this.playerService.selectClip.next(new Clip(
-      this.mainVideoService.getName(), 0 , this.mainVideoService.getVideoDuration()
+      this.mainVideoService.getName(), 0 , this.mainVideoService.getVideoDuration(), []
     ));
   }
   editCLipEmmiter() {

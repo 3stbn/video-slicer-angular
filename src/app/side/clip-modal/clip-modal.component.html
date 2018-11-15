@@ -63,6 +63,27 @@
             </div>
           </div>
         </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Tags</label>
+          </div>
+          <div class="field-body">
+            <div class="field has-addons">
+              <div class="control is-expanded">
+                <input class="input" type="text" placeholder="Tag Name" [(ngModel)]="tagInput">
+              </div>
+              <div class="control">
+                <a class="button is-info" (click)="onAddTag()">
+                  Add
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+          <span class="tag is-info" *ngFor="let tag of clipTags, let i = index"  style="margin: 0 4px">
+            {{tag}}
+            <button class="delete is-small" (click)="removeTag(i)"></button>
+          </span>
       </section>
       <footer class="modal-card-foot" style="justify-content: flex-end">
         <button class="button is-primary" 

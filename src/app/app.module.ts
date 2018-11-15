@@ -17,6 +17,7 @@ import { VideoPlayerComponent } from './video-player/video-player.component';
 import { ClipService } from './shared/clip.service';
 import { PlayerService } from './shared/player.service';
 import { MainVideoService } from './shared/mainVideo.service';
+import { SearchTagComponent } from './side/search-tag/search-tag.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { MainVideoService } from './shared/mainVideo.service';
     StaticClipComponent,
     VideoEditorComponent,
     VideoPlayerComponent,
+    SearchTagComponent,
   ],
   imports: [
     BrowserModule,

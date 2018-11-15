@@ -20,6 +20,9 @@ export class ClipModalComponent implements OnInit, OnDestroy {
   clipStartInput: number;
   clipEndInput: number;
 
+  tagInput: string;
+  clipTags: string[] = [];
+
   videoDuration: number;
   videoSource: string;
 
@@ -41,6 +44,7 @@ export class ClipModalComponent implements OnInit, OnDestroy {
       this.clipStartInput = clipToEdit.start;
       this.clipEndInput = clipToEdit.end;
       this.videoSource = `${this.videoSource}#t=${clipToEdit.start},${clipToEdit.end}`;
+      this.clipTags = clipToEdit.tags;
     } else {
       this.clipStartInput = 0;
     }
@@ -70,17 +74,24 @@ export class ClipModalComponent implements OnInit, OnDestroy {
   onSaveClip() {
     switch (this.modalType) {
       case('create'):
-        const clip = new Clip(this.clipNameInput, this.clipStartInput, this.clipEndInput);
+        const clip = new Clip(this.clipNameInput, this.clipStartInput, this.clipEndInput, this.clipTags);
         this.clipService.addCLip(clip);
         this.closeModal();
         this.playerService.selectClip.next(clip);
         break;
       case('edit'):
-        const clipEdited = new Clip(this.clipNameInput, this.clipStartInput, this.clipEndInput);
+        const clipEdited = new Clip(this.clipNameInput, this.clipStartInput, this.clipEndInput, this.clipTags);
         this.clipService.editClip(clipEdited, this.clipId);
         this.closeModal();
         this.playerService.selectClip.next(clipEdited);
     }
+  }
+  onAddTag() {
+    this.clipTags.push(this.tagInput);
+    this.tagInput = '';
+  }
+  removeTag(index) {
+    this.clipTags.splice( index, 1);
   }
 }
 
