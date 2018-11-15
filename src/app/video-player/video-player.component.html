@@ -1,5 +1,6 @@
+<div *ngIf="preLoader" class="pre-loader"></div>
 <div class="video" style="width: 70%; margin: auto">
-  <div class="video-box" >
+  <div class="video-box " >
     <video #videoSelector
     (loadedmetadata)="defineVideoDuration()"
     (timeupdate)="manageVideoTracker()"

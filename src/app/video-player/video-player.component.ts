@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ViewChild, ElementRef, Renderer2, ChangeDetec
 import { PlayerService } from '../shared/player.service';
 import { MainVideoService } from '../shared/mainVideo.service';
 import { ClipService } from '../shared/clip.service';
+import { deflateSync } from 'zlib';
 
 @Component({
   selector: 'app-video-player',
@@ -20,6 +21,9 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
   iconPlayPause = 'fa-play';
   videoDuration: number;
   metadataLoaded: boolean;
+  preLoader = false;
+
+  endVideoFlag: boolean;
 
   @ViewChild('videoSelector') videoSelectorRef: ElementRef;
   video: HTMLVideoElement;
@@ -42,6 +46,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
       this.updateTrackerBetween(this.video.currentTime);
       this.updateClipWidth();
       this.updateTrackerRangeClip();
+      this.endVideoFlag = null;
     }
   }
   defineVideoDuration() {
@@ -56,8 +61,12 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
     this.checkClipEnd(ct);
     this.updateTrackerBetween(ct);
   }
+
   checkClipEnd(currentTime: number) {
     if (Math.floor(currentTime) === Math.floor(this.clipEnd)) {
+      if (this.endVideoFlag !== false ) {
+        this.endVideoFlag = true;
+      }
       this.video.pause();
       this.iconPlayPause = 'fa-play';
       if (this.playType === 'clip') {
@@ -66,7 +75,14 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
     }
   }
   playNextClip() {
-    this.clipService.playNextClip(this.clipId);
+    if (this.clipService.checksLastClip(this.clipId) === false && this.endVideoFlag === true) {
+      this.preLoader = true;
+      this.endVideoFlag = false;
+      setTimeout(() => {
+        this.clipService.playNextClip(this.clipId);
+        this.preLoader = false;
+      }, 3000);
+    }
   }
   updateTrackerBetween(currentTime: number) {
     const trackerBetween = this.trackerBetweenRef.nativeElement;

@@ -135,3 +135,23 @@ input[name="range-lower"]::-ms-thumb {
 input[name="range-upper"]::-ms-thumb {
   background: hsl(0, 0%, 21%);
 }
+
+.pre-loader:before {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  margin-top: 13%;
+  margin-left: -30px;
+  border-radius: 50%;
+  border: 5px solid transparent;
+  border-top-color: coral;
+  border-bottom-color: coral;
+  animation: spinner 0.9s ease infinite;
+}
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
