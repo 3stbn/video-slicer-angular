@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, Renderer2, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, Renderer2, OnChanges, HostListener } from '@angular/core';
 import { PlayerService } from '../shared/player.service';
 import { MainVideoService } from '../shared/mainVideo.service';
 import { ClipService } from '../shared/clip.service';
@@ -8,6 +8,7 @@ import { ClipService } from '../shared/clip.service';
   templateUrl: './video-player.component.html',
   styleUrls: ['./video-player.component.css'],
 })
+
 export class VideoPlayerComponent implements OnInit, OnChanges {
 
   @Input() videoSource: string;
@@ -69,12 +70,17 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
       this.video.pause();
       this.iconPlayPause = 'fa-play';
       if (this.playType === 'clip') {
-        this.playNextClip();
+        this.checkVideoEndFlag();
       }
     }
   }
+  checkVideoEndFlag() {
+    if (this.endVideoFlag === true ) {
+      this.playNextClip();
+    }
+  }
   playNextClip() {
-    if (this.clipService.checksLastClip(this.clipId) === false && this.endVideoFlag === true) {
+    if (this.clipService.checksLastClip(this.clipId) === false) {
       this.preLoader = true;
       this.endVideoFlag = false;
       setTimeout(() => {
@@ -137,4 +143,29 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
     this.iconPlayPause = 'fa-pause';
    });
   }
+  playPreviousClip() {
+    if (this.clipService.checkFirstClip(this.clipId) === false) {
+      this.preLoader = true;
+      this.endVideoFlag = false;
+      setTimeout(() => {
+        this.clipService.playPreviousClip(this.clipId);
+        this.preLoader = false;
+      }, 3000);
+    }
+  }
+  // Plays next and previous clip
+  @HostListener('window:keydown', ['$event'])
+    onkeydown(event) {
+      if (event.keyCode === 39) {
+        this.video.pause();
+        this.iconPlayPause = 'fa-pause';
+        this.playNextClip();
+      }
+      if (event.keyCode === 37) {
+        this.video.pause();
+        this.iconPlayPause = 'fa-pause';
+        this.playPreviousClip();
+      }
+    }
 }
+

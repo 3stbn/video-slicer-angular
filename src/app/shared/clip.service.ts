@@ -47,6 +47,19 @@ export class ClipService  {
     console.log('Index actual' + index);
     this.playerService.playNotifier.next();
   }
+  checkFirstClip(id: number): boolean {
+    const index = this.clips.findIndex((x) => x.id === id);
+    return index === 0 ? true : false;
+  }
+  playPreviousClip(id: number) {
+    if (!id) {
+      return true;
+    }
+    const index = this.clips.findIndex((x) => x.id === id);
+    this.playerService.selectClip.next(this.clips[index - 1]);
+    console.log('Index actual' + index);
+    this.playerService.playNotifier.next();
+  }
   filterClipsByTag(input: string) {
     const term = input.toLowerCase();
     const arrayIndexResult = [];
