@@ -70,13 +70,19 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
       this.video.pause();
       this.iconPlayPause = 'fa-play';
       if (this.playType === 'clip') {
-        this.checkVideoEndFlag();
+        this.checkVideoEndFlag('next');
       }
     }
   }
-  checkVideoEndFlag() {
+  checkVideoEndFlag(type: string) {
     if (this.endVideoFlag === true ) {
-      this.playNextClip();
+      switch (type) {
+        case('next'):
+          this.playNextClip();
+          break;
+        case('previous'):
+          this.playPreviousClip();
+      }
     }
   }
   playNextClip() {
@@ -157,14 +163,20 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
   @HostListener('window:keydown', ['$event'])
     onkeydown(event) {
       if (event.keyCode === 39) {
+        if (this.endVideoFlag !== false ) {
+          this.endVideoFlag = true;
+        }
         this.video.pause();
         this.iconPlayPause = 'fa-pause';
-        this.playNextClip();
+        this.checkVideoEndFlag('next');
       }
       if (event.keyCode === 37) {
+        if (this.endVideoFlag !== false ) {
+          this.endVideoFlag = true;
+        }
         this.video.pause();
         this.iconPlayPause = 'fa-pause';
-        this.playPreviousClip();
+        this.checkVideoEndFlag('previous');
       }
     }
 }
