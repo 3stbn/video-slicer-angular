@@ -2,9 +2,10 @@
   <div class="modal-background"></div>
   <div class="modal-content">
     <div class="modal-card">
+      <form style="overflow-y: auto">
       <header class="modal-card-head">
         <p class="modal-card-title is-marginless" >New CLip</p>
-        <button class="delete" aria-label="close" 
+        <button class="delete" type="button" aria-label="close" 
         (click)="closeModal()"></button>
       </header>
       <section class="modal-card-body">
@@ -25,11 +26,20 @@
             <div class="field">
               <p class="control is-expanded has-icons-left">
                 <input class="input" type="text" placeholder="Name" 
-                [(ngModel)]="clipNameInput" required>
+                [(ngModel)]="clipNameInput" required name="name" minlength="4"  #name="ngModel">
                 <span class="icon is-small is-left">
                   <i class="fas fa-edit"></i>
                 </span>
               </p>
+              <div *ngIf="name.invalid && (name.dirty || name.touched)"
+                class="help is-danger">
+                <div *ngIf="name.errors.required">
+                  Name is required.
+                </div>
+                <div *ngIf="name.errors.minlength">
+                  Name must be at least 4 characters long.
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -40,7 +50,7 @@
           <div class="field-body">
             <div class="field">
               <p class="control is-expanded has-icons-left">
-                <input class="input" type="number" placeholder="Start" min="0"
+                <input class="input" type="number" placeholder="Start" min="0" name="start"
                 [max]="clipEndInput - 1" 
                 [(ngModel)]="clipStartInput"
                 >
@@ -52,7 +62,7 @@
             </div>
             <div class="field">
               <p class="control is-expanded has-icons-left">
-                <input class="input" type="number" placeholder="End"
+                <input class="input" type="number" placeholder="End" name="end"
                 [min]="clipStartInput + 1 "
                 [max]="videoDuration" 
                 [(ngModel)]="clipEndInput">
@@ -70,29 +80,30 @@
           <div class="field-body">
             <div class="field has-addons">
               <div class="control is-expanded">
-                <input class="input" type="text" placeholder="Tag Name" [(ngModel)]="tagInput">
+                <input class="input" type="text" placeholder="Tag Name" [(ngModel)]="tagInput" name="tag" #tag="ngModel" required>
               </div>
               <div class="control">
-                <a class="button is-info" (click)="onAddTag()">
-                  Add
-                </a>
+                <button class="button is-info" (click)="onAddTag()" [disabled]="!tag.valid">
+                  Add Tag
+                </button>
               </div>
             </div>
           </div>
         </div>
           <span class="tag is-info" *ngFor="let tag of clipTags, let i = index"  style="margin: 0 4px">
             {{tag}}
-            <button class="delete is-small" (click)="removeTag(i)"></button>
+            <button type="button" class="delete is-small" (click)="removeTag(i)"></button>
           </span>
       </section>
       <footer class="modal-card-foot" style="justify-content: flex-end">
-        <button class="button is-primary" 
+        <button class="button is-primary"  type="button" [disabled]="!name.valid" 
           (click)="onSaveClip()">Save
         </button>
-        <button class="button" 
+        <button class="button"  type="button"
           (click)="closeModal()" >Cancel
       </button>
       </footer>
+      </form>
       </div>
   </div>
 </div>
