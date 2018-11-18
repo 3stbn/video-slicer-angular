@@ -2,12 +2,15 @@ import { Clip } from './clip.model';
 import { Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { PlayerService } from './player.service';
+import { MainVideoService } from './mainVideo.service';
 
 @Injectable()
 export class ClipService  {
-  constructor(private playerService: PlayerService) {
+  constructor(private playerService: PlayerService, private mainVideoService: MainVideoService) {
     for (let i = 1; i <= 4; i ++) {
-      this.addCLip(new Clip(`Test${i}`, i , i + 4, [`Tag ${i}`, `Tag ${i + 1}` ]));
+      this.addCLip(new Clip(`Test${i}`, i , i + 4, [`Tag ${i}`, `Tag ${i + 1}` ],
+      `${this.mainVideoService.getSource()}#t=${i},${i + 4}`
+      ));
     }
   }
   private clips: Clip[] = [];

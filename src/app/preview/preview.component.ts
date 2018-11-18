@@ -38,7 +38,7 @@ export class PreviewComponent implements OnInit, OnDestroy {
         this.clipStart = clip.start;
         this.clipEnd = clip.end;
         this.clipName = clip.name;
-        this.videoSource = `${this.videoSource}#t=${clip.start},${clip.end}`;
+        this.videoSource = clip.source;
         this.playType = 'clip';
         this.clipId = clip.id;
       }

@@ -22,7 +22,8 @@ export class StaticClipComponent implements OnInit {
     );
   }
   selectClip() {
-    this.playerService.selectClip.next(new Clip(this.mainVideoName, 0, this.mainVideoDuration, []));
+    this.playerService.selectClip.next(new Clip(this.mainVideoName, 0, this.mainVideoDuration,
+      [], this.mainVideoService.getSource()));
     this.playerService.playNotifier.next();
   }
 }

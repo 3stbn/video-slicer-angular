@@ -74,13 +74,16 @@ export class ClipModalComponent implements OnInit, OnDestroy {
   onSaveClip() {
     switch (this.modalType) {
       case('create'):
-        const clip = new Clip(this.clipNameInput, this.clipStartInput, this.clipEndInput, this.clipTags);
+        const clip = new Clip(
+          this.clipNameInput, this.clipStartInput, this.clipEndInput, this.clipTags,
+          `${this.videoSource}#t=${this.clipStartInput},${this.clipEndInput}`);
         this.clipService.addCLip(clip);
         this.closeModal();
         this.playerService.selectClip.next(clip);
         break;
       case('edit'):
-        const clipEdited = new Clip(this.clipNameInput, this.clipStartInput, this.clipEndInput, this.clipTags);
+        const clipEdited = new Clip(this.clipNameInput, this.clipStartInput, this.clipEndInput,
+           this.clipTags, `${this.videoSource}#t=${this.clipStartInput},${this.clipEndInput}` );
         this.clipService.editClip(clipEdited, this.clipId);
         this.closeModal();
         this.playerService.selectClip.next(clipEdited);

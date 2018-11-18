@@ -15,22 +15,20 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
   @Input() playType: string;
   @Input() clipStart: number;
   @Input() clipEnd: number;
-
   @Input() clipId: number;
-
-  iconPlayPause = 'fa-play';
-  videoDuration: number;
-  metadataLoaded: boolean;
-  preLoader = false;
-
-  endVideoFlag: boolean;
-
-  @ViewChild('videoSelector') videoSelectorRef: ElementRef;
-  video: HTMLVideoElement;
 
   @ViewChild ('trackerBetween') trackerBetweenRef: ElementRef;
   @ViewChild ('trackRangeClip') trackerRangeRef: ElementRef;
   @ViewChild ('clipWidth') clipWidthRef: ElementRef;
+  @ViewChild('videoSelector') videoSelectorRef: ElementRef;
+
+  iconPlayPause = 'fa-play';
+  videoDuration: number;
+  metadataLoaded: boolean;
+  preLoader: boolean;
+  blockVideoControls: boolean;
+  playDelay: any;
+  video: HTMLVideoElement;
 
   constructor(private playerService: PlayerService,
               private renderer: Renderer2,
@@ -46,7 +44,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
       this.updateTrackerBetween(this.video.currentTime);
       this.updateClipWidth();
       this.updateTrackerRangeClip();
-      this.endVideoFlag = null;
+      this.blockVideoControls = null;
     }
   }
   defineVideoDuration() {
@@ -61,21 +59,20 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
     this.checkClipEnd(ct);
     this.updateTrackerBetween(ct);
   }
-
   checkClipEnd(currentTime: number) {
     if (Math.floor(currentTime) === Math.floor(this.clipEnd)) {
-      if (this.endVideoFlag !== false ) {
-        this.endVideoFlag = true;
+      if (this.blockVideoControls !== false ) {
+        this.blockVideoControls = true;
       }
       this.video.pause();
       this.iconPlayPause = 'fa-play';
       if (this.playType === 'clip') {
-        this.checkVideoEndFlag('next');
+        this.checkVideoControls('next');
       }
     }
   }
-  checkVideoEndFlag(type: string) {
-    if (this.endVideoFlag === true ) {
+  checkVideoControls(type: string) {
+    if (this.blockVideoControls === true ) {
       switch (type) {
         case('next'):
           this.playNextClip();
@@ -88,9 +85,19 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
   playNextClip() {
     if (this.clipService.checksLastClip(this.clipId) === false) {
       this.preLoader = true;
-      this.endVideoFlag = false;
-      setTimeout(() => {
+      this.blockVideoControls = false;
+      this.playDelay = setTimeout(() => {
         this.clipService.playNextClip(this.clipId);
+        this.preLoader = false;
+      }, 3000);
+    }
+  }
+  playPreviousClip() {
+    if (this.clipService.checkFirstClip(this.clipId) === false) {
+      this.preLoader = true;
+      this.blockVideoControls = false;
+      this.playDelay = setTimeout(() => {
+        this.clipService.playPreviousClip(this.clipId);
         this.preLoader = false;
       }, 3000);
     }
@@ -103,7 +110,6 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
     this.renderer.setStyle(trackerBetween, 'width', width);
     this.renderer.setStyle(trackerBetween, 'left', left);
   }
-
   // Gray bar for the Range of the Clip
   updateTrackerRangeClip() {
     const trackerRangeClip = this.trackerRangeRef.nativeElement;
@@ -143,40 +149,39 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
       this.iconPlayPause = 'fa-play';
     }
   }
-  handleAutoPlay() {
+  handlePlaylist() {
    this.playerService.playNotifier.subscribe(() => {
-    this.video.play();
-    this.iconPlayPause = 'fa-pause';
+     // Clears the timeout if it is activated
+     if (this.blockVideoControls === false) {
+      this.preLoader = false;
+      clearTimeout(this.playDelay);
+      this.video.play();
+      this.iconPlayPause = 'fa-pause';
+      // Plays the playlist
+     } else {
+      this.video.play();
+      this.iconPlayPause = 'fa-pause';
+     }
    });
-  }
-  playPreviousClip() {
-    if (this.clipService.checkFirstClip(this.clipId) === false) {
-      this.preLoader = true;
-      this.endVideoFlag = false;
-      setTimeout(() => {
-        this.clipService.playPreviousClip(this.clipId);
-        this.preLoader = false;
-      }, 3000);
-    }
   }
   // Plays next and previous clip
   @HostListener('window:keydown', ['$event'])
     onkeydown(event) {
       if (event.keyCode === 39) {
-        if (this.endVideoFlag !== false ) {
-          this.endVideoFlag = true;
+        if (this.blockVideoControls !== false ) {
+          this.blockVideoControls = true;
         }
         this.video.pause();
         this.iconPlayPause = 'fa-pause';
-        this.checkVideoEndFlag('next');
+        this.checkVideoControls('next');
       }
       if (event.keyCode === 37) {
-        if (this.endVideoFlag !== false ) {
-          this.endVideoFlag = true;
+        if (this.blockVideoControls !== false ) {
+          this.blockVideoControls = true;
         }
         this.video.pause();
         this.iconPlayPause = 'fa-pause';
-        this.checkVideoEndFlag('previous');
+        this.checkVideoControls('previous');
       }
     }
 }
