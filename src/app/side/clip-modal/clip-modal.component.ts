@@ -43,8 +43,8 @@ export class ClipModalComponent implements OnInit, OnDestroy {
       this.clipNameInput = clipToEdit.name;
       this.clipStartInput = clipToEdit.start;
       this.clipEndInput = clipToEdit.end;
-      this.videoSource = `${this.videoSource}#t=${clipToEdit.start},${clipToEdit.end}`;
-      this.clipTags = clipToEdit.tags;
+      this.videoSource = clipToEdit.source;
+      this.clipTags = clipToEdit.tags.slice();
     } else {
       this.clipStartInput = 0;
     }
