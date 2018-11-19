@@ -7,11 +7,11 @@ import { MainVideoService } from './mainVideo.service';
 @Injectable()
 export class ClipService  {
   constructor(private playerService: PlayerService, private mainVideoService: MainVideoService) {
-    for (let i = 1; i <= 4; i ++) {
+/*     for (let i = 1; i <= 4; i ++) {
       this.addCLip(new Clip(`Test${i}`, i , i + 4, [`Tag ${i}`, `Tag ${i + 1}` ],
       `${this.mainVideoService.getSource()}#t=${i},${i + 4}`
       ));
-    }
+    } */
   }
   private clips: Clip[] = [];
 
@@ -23,7 +23,10 @@ export class ClipService  {
   public getClips(): Clip[] {
     return this.clips.slice();
   }
-
+  public setClips(clips: Clip[]) {
+    this.clips = clips;
+    this.clipsChanged.next(this.clips.slice());
+  }
   addCLip(clip: Clip) {
     clip.id = Math.floor(Math.random() * 100000000);
     this.clips.push(clip);

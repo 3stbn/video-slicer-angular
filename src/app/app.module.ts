@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -18,6 +19,7 @@ import { ClipService } from './shared/clip.service';
 import { PlayerService } from './shared/player.service';
 import { MainVideoService } from './shared/mainVideo.service';
 import { SearchTagComponent } from './side/search-tag/search-tag.component';
+import StorageService from './shared/storage.service';
 
 @NgModule({
   declarations: [
@@ -35,9 +37,10 @@ import { SearchTagComponent } from './side/search-tag/search-tag.component';
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
-  providers: [ClipService, PlayerService, MainVideoService],
+  providers: [ClipService, PlayerService, MainVideoService, StorageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

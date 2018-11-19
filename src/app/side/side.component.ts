@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Clip } from '../shared/clip.model';
 import { ClipService } from '../shared/clip.service';
 import { Subscription } from 'rxjs';
+import StorageService from '../shared/storage.service';
 
 @Component({
   selector: 'app-side',
@@ -14,7 +15,7 @@ export class SideComponent implements OnInit, OnDestroy {
   clips = [];
   clipSelected: Clip;
 
-  constructor(private clipService: ClipService) { }
+  constructor(private clipService: ClipService, private storageService: StorageService) { }
 
   // Services
   clipsChangedSubscription: Subscription;
@@ -23,6 +24,7 @@ export class SideComponent implements OnInit, OnDestroy {
   clipToEditSubscription: Subscription;
 
   ngOnInit() {
+    this.storageService.getClips();
     this.clips = this.clipService.getClips();
     this.clipsChangedSubscription = this.clipService.clipsChanged.subscribe(
       (clips: Clip[]) => this.clips = clips
