@@ -1,12 +1,12 @@
 <div *ngIf="preLoader" class="pre-loader"></div>
 <div class="video" style="width: 70%; margin: auto">
   <div class="video-box " >
-    <video #videoSelector
+    <video #videoSelector 
+    [src]="videoSource"
     (loadedmetadata)="defineVideoDuration()"
     (timeupdate)="manageVideoTracker()"
     (canplaythrough)="handlePlaylist()"
     >
-      <source [src]="videoSource"type="video/mp4">
     </video>
   </div>
   <div class="videoControls">

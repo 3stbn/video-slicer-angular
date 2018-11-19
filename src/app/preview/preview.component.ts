@@ -28,9 +28,19 @@ export class PreviewComponent implements OnInit, OnDestroy {
     // Starts with main video
     this.videoSource = this.mainVideoService.getSource();
     this.clipName = this.mainVideoService.getName();
+    // Observable of the type of player
+    this.playerService.playType.subscribe(
+      type => {
+        this.playType = type;
+      }
+    );
     // Duration of main video
     this.videoDurationSubscription = this.playerService.videoDuration.subscribe(
-      (videoDuration: number) => this.clipEnd = videoDuration
+      (videoDuration: number) => {
+        if (this.playType === 'default') {
+          this.clipEnd = videoDuration;
+        }
+      }
     );
     // Changes when a clip was selected
     this.selectedClipSubscription = this.playerService.selectClip.subscribe(

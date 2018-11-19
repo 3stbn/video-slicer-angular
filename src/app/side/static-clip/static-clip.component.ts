@@ -14,6 +14,8 @@ export class StaticClipComponent implements OnInit {
 
   mainVideoDuration: number;
   mainVideoName: string;
+  urlInput: string;
+  changeUrl: boolean;
 
   ngOnInit() {
     this.mainVideoName = this.mainVideoService.getName();
@@ -24,6 +26,11 @@ export class StaticClipComponent implements OnInit {
   selectClip() {
     this.playerService.selectClip.next(new Clip(this.mainVideoName, 0, this.mainVideoDuration,
       [], this.mainVideoService.getSource()));
+    this.playerService.playType.next('default');
     this.playerService.playNotifier.next();
+  }
+  onChangeClip() {
+    this.mainVideoService.changeUrl(this.urlInput);
+    this.changeUrl = false ;
   }
 }

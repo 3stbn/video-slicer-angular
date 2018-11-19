@@ -5,10 +5,35 @@
           <p class="title is-4 has-text-centered has-text-info">Main Video</p>
         </div>
       </div>
+      <div class="media" *ngIf="changeUrl">
+        <div class="media-content">
+          <div class="field has-addons">
+            <div class="control has-icons-left">
+              <input class="input" type="text" placeholder="URL" [(ngModel)]="urlInput">
+              <span class="icon is-small is-left">
+                <i class="fas fa-globe"></i>
+              </span>
+            </div>
+            <div class="control">
+              <a class="button is-info" (click)="onChangeClip()">
+                Change
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <footer class="card-footer">
+    <footer class="card-footer" *ngIf="!changeUrl">
       <a class="card-footer-item"
       (click)="selectClip()">
       Play</a>
+      <a class="card-footer-item"
+      (click)="changeUrl = true">
+      Change</a>
+    </footer>
+    <footer class="card-footer" *ngIf="changeUrl">
+      <a class="card-footer-item"
+      (click)="changeUrl = false">
+      Cancel</a>
     </footer>
   </div>

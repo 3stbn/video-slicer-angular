@@ -15,4 +15,7 @@ export class MainVideoService {
   public updateVideoDuration (duration: number) {
     this.duration = duration;
   }
+  public changeUrl(url: string) {
+    this.source = url;
+  }
 }

@@ -8,5 +8,6 @@ export class PlayerService {
 
   selectClip = new Subject<Clip>();
 
-  playNotifier = new Subject();
+  playNotifier = new Subject<void>();
+  playType = new Subject<string>();
 }

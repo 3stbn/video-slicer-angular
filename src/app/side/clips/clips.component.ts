@@ -35,6 +35,7 @@ export class ClipsComponent implements OnInit {
   }
   selectClip() {
     this.playerService.selectClip.next(this.clip);
+    this.playerService.playType.next('clip');
     this.playerService.playNotifier.next();
   }
 }
