@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Clip } from '../shared/clip.model';
 import { ClipService } from '../shared/clip.service';
 import { Subscription } from 'rxjs';
-import StorageService from '../shared/storage.service';
+import { StorageService } from '../shared/storage.service';
 
 @Component({
   selector: 'app-side',

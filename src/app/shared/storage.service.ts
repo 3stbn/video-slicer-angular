@@ -5,7 +5,7 @@ import { Clip } from './clip.model';
 import { map } from 'rxjs/operators';
 
 @Injectable()
-export default class StorageService {
+export class StorageService {
   constructor(private httpClient: HttpClient,
               private clipService: ClipService) {}
   backendUrl = 'https://ng-video-slicer.firebaseio.com/';

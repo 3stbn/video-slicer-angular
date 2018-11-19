@@ -19,7 +19,7 @@ import { ClipService } from './shared/clip.service';
 import { PlayerService } from './shared/player.service';
 import { MainVideoService } from './shared/mainVideo.service';
 import { SearchTagComponent } from './side/search-tag/search-tag.component';
-import StorageService from './shared/storage.service';
+import { StorageService } from './shared/storage.service';
 
 @NgModule({
   declarations: [
