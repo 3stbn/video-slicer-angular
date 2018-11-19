@@ -9,10 +9,10 @@ import { StorageService } from '../shared/storage.service';
 export class HeaderComponent implements OnInit {
 
   constructor(private storageService: StorageService) { }
-
+  saveSuccess = false;
   ngOnInit() {
   }
   storeData() {
-    this.storageService.storeClips().subscribe(response => console.log(response));
+    this.storageService.storeClips().subscribe(() => this.saveSuccess = true );
   }
 }

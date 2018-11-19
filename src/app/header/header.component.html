@@ -10,10 +10,17 @@
         <a class="button is-primary" (click)="storeData()">
           <strong>Save Data</strong>
         </a>
-        <a class="button is-light">
-          Log in
-        </a>
       </div>
     </div>
   </div>
 </nav>
+<div class="modal is-active" *ngIf="saveSuccess">
+  <div class="modal-background"></div>
+  <div class="modal-content">
+    <div class="notification is-success">
+      <button class="delete" (click)="saveSuccess = false"></button>
+      Clips Saved Correctly
+    </div>
+  </div>
+  <button class="modal-close is-large" aria-label="close" (click)="saveSuccess = false"></button>
+</div>
