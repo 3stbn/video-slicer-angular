@@ -141,7 +141,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
     const video = this.video;
     if (video.paused) {
       if (Math.floor(this.clipEnd) > Math.floor(this.video.currentTime)) {
-        this.video.play();
+        this.playPromise();
         this.iconPlayPause = 'fa-pause';
       }
     } else {
@@ -155,14 +155,30 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
      if (this.blockVideoControls === false) {
       this.preLoader = false;
       clearTimeout(this.playDelay);
-      this.video.play();
+      this.playPromise();
       this.iconPlayPause = 'fa-pause';
       // Plays the playlist
      } else {
-      this.video.play();
+      this.playPromise();
       this.iconPlayPause = 'fa-pause';
      }
    });
+  }
+  playPromise() {
+    const playPromise = this.video.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        this.preLoader = false;
+        this.video.play();
+        // Automatic playback started!
+        // Show playing UI.
+      })
+      .catch(error => {
+        this.preLoader = true;
+        // Auto-play was prevented
+        // Show paused UI.
+      });
+    }
   }
   // Plays next and previous clip
   @HostListener('window:keydown', ['$event'])
