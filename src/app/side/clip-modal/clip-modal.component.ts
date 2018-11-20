@@ -43,7 +43,10 @@ export class ClipModalComponent implements OnInit, OnDestroy {
       this.clipNameInput = clipToEdit.name;
       this.clipStartInput = clipToEdit.start;
       this.clipEndInput = clipToEdit.end;
-      this.videoSource = clipToEdit.source;
+      // extracts previous media marker
+      const originalSource = clipToEdit.source.slice(0, clipToEdit.source.search('#t='));
+      this.videoSource = originalSource;
+      // gets a copy of the tags to edit
       this.clipTags = clipToEdit.tags.slice();
     } else {
       this.clipStartInput = 0;
@@ -70,6 +73,7 @@ export class ClipModalComponent implements OnInit, OnDestroy {
   }
   closeModal(): void {
     this.clipService.toggleModal.next(false);
+    this.playerService.playType.next('clip');
   }
   onSaveClip() {
     switch (this.modalType) {
@@ -80,6 +84,7 @@ export class ClipModalComponent implements OnInit, OnDestroy {
         this.clipService.addCLip(clip);
         this.closeModal();
         this.playerService.selectClip.next(clip);
+        this.playerService.playType.next('clip');
         break;
       case('edit'):
         const clipEdited = new Clip(this.clipNameInput, this.clipStartInput, this.clipEndInput,
@@ -87,6 +92,7 @@ export class ClipModalComponent implements OnInit, OnDestroy {
         this.clipService.editClip(clipEdited, this.clipId);
         this.closeModal();
         this.playerService.selectClip.next(clipEdited);
+        this.playerService.playType.next('clip');
     }
   }
   onAddTag() {
