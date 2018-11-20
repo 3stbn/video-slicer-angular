@@ -38,7 +38,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.video = this.videoSelectorRef.nativeElement;
   }
-  ngOnChanges() {
+  ngOnChanges(changes) {
     if (this.metadataLoaded === true) {
       this.video.currentTime = this.clipStart;
       this.updateTrackerBetween(this.video.currentTime);
@@ -51,6 +51,11 @@ export class VideoPlayerComponent implements OnInit, OnChanges {
     // Triggered when the video data is loaded to define max values for the ranges inputs
     this.metadataLoaded = true;
     this.videoDuration = this.video.duration;
+    // update video player ui
+    this.updateClipWidth();
+    this.updateTrackerRangeClip();
+    this.updateTrackerBetween(this.video.currentTime);
+    // update main video
     this.playerService.videoDuration.next(this.video.duration);
     this.mainVideoService.updateVideoDuration(this.videoDuration);
   }

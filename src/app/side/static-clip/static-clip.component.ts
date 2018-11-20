@@ -31,6 +31,13 @@ export class StaticClipComponent implements OnInit {
   }
   onChangeClip() {
     this.mainVideoService.changeUrl(this.urlInput);
+    this.urlInput = '';
     this.changeUrl = false ;
+    // Select New Clip
+    this.playerService.selectClip.next(new Clip(
+      this.mainVideoService.getName(), 0 , this.mainVideoService.getVideoDuration(),
+      [], this.mainVideoService.getSource()
+    ));
+    this.playerService.playType.next('default');
   }
 }
