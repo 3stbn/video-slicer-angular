@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, Renderer2, OnChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, Renderer2 } from '@angular/core';
 import { Clip } from '../shared/clip.model';
 import { PlayerService } from '../shared/player.service';
 import { MainVideoService } from '../shared/mainVideo.service';
@@ -8,7 +8,7 @@ import { MainVideoService } from '../shared/mainVideo.service';
   templateUrl: './video-editor.component.html',
   styleUrls: ['./video-editor.component.css']
 })
-export class VideoEditorComponent implements OnInit, OnChanges {
+export class VideoEditorComponent implements OnInit {
   @Input() playerType: string;
   @Input() clip: Clip;
   @Input() clipStartInput: number;
@@ -37,10 +37,6 @@ export class VideoEditorComponent implements OnInit, OnChanges {
       this.clipStartInput = clip.start;
       this.clipEndInput = clip.end;
       this.video.currentTime = clip.start;
-    }
-  }
-  ngOnChanges() {
-    if (this.metadataLoaded === true) {
       this.updateTrackerBetween();
     }
   }

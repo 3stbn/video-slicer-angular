@@ -27,6 +27,7 @@ export class ClipsComponent implements OnInit {
       this.mainVideoService.getName(), 0 , this.mainVideoService.getVideoDuration(),
       [], this.mainVideoService.getSource()
     ));
+    this.playerService.playType.next('default');
   }
   editCLipEmmiter() {
     this.clipService.toggleModal.next(true);
