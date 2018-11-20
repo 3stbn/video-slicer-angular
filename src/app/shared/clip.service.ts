@@ -24,8 +24,10 @@ export class ClipService  {
     return this.clips.slice();
   }
   public setClips(clips: Clip[]) {
-    this.clips = clips;
-    this.clipsChanged.next(this.clips.slice());
+    if (clips) {
+      this.clips = clips;
+      this.clipsChanged.next(this.clips.slice());
+    }
   }
   addCLip(clip: Clip) {
     clip.id = Math.floor(Math.random() * 100000000);
@@ -35,6 +37,8 @@ export class ClipService  {
   editClip(modifiedClip: Clip, clipId: number) {
     const index = this.clips.findIndex((x) => x.id === clipId);
     this.clips[index] = modifiedClip;
+    // reinserts the id
+    this.clips[index].id = clipId;
     this.clipsChanged.next(this.clips.slice());
   }
   deleteClip (id: number) {
@@ -80,7 +84,11 @@ export class ClipService  {
       });
     });
     const filterResult = arrayIndexResult.map((item) => this.clips[item]);
-    this.clipsChanged.next(filterResult);
+    if (term === '') {
+      this.clipsChanged.next(this.clips.slice());
+    } else {
+      this.clipsChanged.next(filterResult);
+    }
   }
 }
 

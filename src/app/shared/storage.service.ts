@@ -16,7 +16,9 @@ export class StorageService {
     this.httpClient.get<Clip[]>(this.backendUrl + 'clips.json')
       .pipe( map (
         clips => {
-          console.log(clips);
+          if (clips === null) {
+            return;
+          }
           for (const clip of clips) {
             if (!clip['tags']) {
               clip['tags'] = [];
