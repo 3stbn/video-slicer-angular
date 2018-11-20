@@ -9,3 +9,7 @@
   overflow-y: auto;
   max-height: calc(100vh - 2.5rem)
 }
+.content .is-9 {
+  overflow-y: auto;
+  max-height: calc(100vh - 2.5rem)
+}
