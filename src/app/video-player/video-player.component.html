@@ -22,17 +22,6 @@
       <div class="clip-width" #clipWidth></div>
       <div class="input-range-tracker-clip" #trackRangeClip (click)="changeCurrentTime($event)"></div>
       <div class="input-range-tracker-between" #trackerBetween></div>
-      <input type="range" min="0" name="range-lower" id="range-lower"
-      [max]="videoDuration"
-      [value]="clipStart"
-      disabled
-      >
-      <input type="range" name="range-upper" id="range-upper"
-      min="0"
-      [max]="videoDuration"
-      [value]="clipEnd"
-      disabled
-      >
     </div>
   </div>
 </div>
