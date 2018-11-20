@@ -1,5 +1,5 @@
 export class MainVideoService {
-  private source = 'https://media.w3.org/2010/05/sintel/trailer.mp4';
+  private source = 'https://www.w3schools.com/html/mov_bbb.mp4';
   private name = 'Main Video';
   private duration: number;
 
